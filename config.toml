@@ -1,0 +1,4 @@
+baseURL = "http://watta.org/"
+languageCode = "ja-jp"
+title = "watta.org"
+theme = "minimo"
