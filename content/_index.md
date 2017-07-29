@@ -1,6 +1,5 @@
-## hi
-
-- foo
-- bar
-- baz
-- hoge
+- <i class="fa fa-pencil" aria-hidden="true"></i> http://kga.hatenablog.jp/
+- <i class="fa fa-twitter" aria-hidden="true"></i> https://twitter.com/kga
+- <i class="fa fa-github" aria-hidden="true"></i> https://github.com/kga
+- <i class="fa fa-mixcloud" aria-hidden="true"></i> https://www.mixcloud.com/kgaaa/
+- <i class="fa fa-music" aria-hidden="true"></i> https://imappp.club/
