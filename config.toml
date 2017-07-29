@@ -1,5 +1,5 @@
 baseURL = "http://watta.org.s3-website-ap-northeast-1.amazonaws.com/"
-languageCode = "ja-jp"
+languageCode = "en-us"
 title = "watta.org"
 theme = "minimo"
 canonifyURLs = true
