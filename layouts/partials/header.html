@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang='{{ .Site.Language.Lang }}'>
+
+{{ partial "head/head" . }}
+
+<body class='{{ .Kind }}'>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTVS9PR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+  <div class='site'>
+    <header id='header' class='header-container'>
+      <div class='site-header'>
+        {{ partial "nav/menus/main" . }}
+        <div class='site-info'>
+          {{ if eq .Kind "home" }}
+          <h1 class='site-title title'>{{ .Site.Title }}</h1>
+          {{ else }}
+          <p class='site-title title'>{{ .Site.Title }}</p>
+          {{ end }}
+          <p class='site-description'>{{ .Site.Params.description }}</p>
+        </div>
+      </div>
+    </header>
