@@ -2,3 +2,5 @@ baseURL = "http://watta.org/"
 languageCode = "ja-jp"
 title = "watta.org"
 theme = "minimo"
+baseurl = "http://watta.org.s3-website-ap-northeast-1.amazonaws.com/"
+canonifyurls = true
