@@ -6,5 +6,4 @@ script:
 - hugo
 - aws s3 sync public/ s3://watta.org --delete
 notifications:
-  email:
-    on_failure: always
+  slack: kga:HKLMCoZkYEnx38ZWBRCvP1mA
