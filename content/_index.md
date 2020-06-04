@@ -1,4 +1,7 @@
-- <i class="fa fa-pencil" aria-hidden="true"></i> https://blog.kga.gg/
-- <i class="fa fa-twitter" aria-hidden="true"></i> https://twitter.com/kga
-- <i class="fa fa-github" aria-hidden="true"></i> https://github.com/kga
-- <i class="fa fa-mixcloud" aria-hidden="true"></i> https://www.mixcloud.com/kgaaa/
+---
+title: index
+---
+- https://blog.kga.gg/
+- https://twitter.com/kga
+- https://github.com/kga
+- https://www.mixcloud.com/kgaaa/
