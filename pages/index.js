@@ -21,7 +21,7 @@ export default function Home() {
 
         <div className="links">
           <ul>
-            { links.map(link => <li><a href={link}>{link}</a></li>) }
+            { links.map((link, index) => <li key={index}><a href={link}>{link}</a></li>) }
           </ul>
         </div>
       </main>
