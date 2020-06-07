@@ -46,11 +46,6 @@ jobs:
         run: |
           yarn export
 
-      - name: check
-        run: |
-          ls -la
-          ls -la out/
-
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
