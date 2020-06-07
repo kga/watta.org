@@ -1,0 +1,34 @@
+name: deploy
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
+      - name: install
+        run: |
+          yarn install
+
+      - name: build
+        run: |
+          yarn build
+        env:
+          GITHUB_PAGES: true
+
+      - name: export
+        run: |
+          yarn export
+
+      - name: check
+        run: |
+          ls -la
+          ls -la out/
