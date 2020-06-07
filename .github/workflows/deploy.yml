@@ -30,7 +30,6 @@ jobs:
       - name: install
         run: |
           yarn install
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
 
       - name: Setup next.js build cache
         uses: actions/cache@v2
