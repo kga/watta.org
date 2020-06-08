@@ -1,4 +1,4 @@
-import styles from "./index.module.css"
+import styles from "./index.module.scss"
 import Head from "next/head"
 
 export default function Index(links: string[]) {

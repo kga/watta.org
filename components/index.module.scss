@@ -19,10 +19,10 @@
 .listAnchor {
     color: inherit;
     text-decoration: none;
-}
 
-.listAnchor:hover {
-    color: #333;
+    &:hover {
+        color: #C00;
+    }
 }
 
 .title {
