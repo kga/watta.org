@@ -1,4 +1,4 @@
-import Index from "../components/Index";
+import Index from '../components/Index';
 
 const links = [
   'https://blog.kga.gg/',
@@ -8,7 +8,5 @@ const links = [
 ];
 
 export default function Home() {
-  return (
-    Index(links)
-  )
+  return Index(links);
 }
