@@ -20,7 +20,10 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
+    "pages/**/*.tsx",
+  ],
+  "exclude": [
+    "node_modules",
+    "out",
   ],
 }
