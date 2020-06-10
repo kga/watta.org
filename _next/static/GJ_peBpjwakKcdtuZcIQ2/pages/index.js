@@ -86,6 +86,9 @@ function Index(links) {
   }, __jsx(head_default.a, null, __jsx("title", null, "watta.org"), __jsx("link", {
     rel: "icon",
     href: "/favicon.ico"
+  }), __jsx("meta", {
+    name: "description",
+    content: "my playground"
   })), __jsx("main", {
     className: index_module_default.a.mainColumn
   }, __jsx("h1", {
