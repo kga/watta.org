@@ -7,6 +7,7 @@ export default function Index(links: string[]) {
       <Head>
         <title>watta.org</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta name="description" content="my playground" />
       </Head>
 
       <main className={styles.mainColumn}>
