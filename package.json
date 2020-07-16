@@ -29,6 +29,6 @@
     "eslint-plugin-react": "^7.20.3",
     "gts": "^2.0.2",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.7"
   }
 }
