@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@types/node": "^14.0.27",
-    "@types/react": "^16.9.43",
+    "@types/react": "^16.9.48",
     "eslint-plugin-react": "^7.20.5",
     "gts": "^2.0.2",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
