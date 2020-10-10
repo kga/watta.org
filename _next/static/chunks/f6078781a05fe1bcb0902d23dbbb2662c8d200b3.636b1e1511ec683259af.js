@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
+(window["webpackJsonp_N_E"] = window["webpackJsonp_N_E"] || []).push([[2],{
 
 /***/ "/jkW":
 /***/ (function(module, exports, __webpack_require__) {
@@ -111,10 +111,140 @@ module.exports = _interopRequireWildcard;
 
 /***/ }),
 
-/***/ "4JlD":
+/***/ "3WeD":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+var _slicedToArray = __webpack_require__("J4zp");
+
+exports.__esModule = true;
+exports.searchParamsToUrlQuery = searchParamsToUrlQuery;
+exports.urlQueryToSearchParams = urlQueryToSearchParams;
+exports.assign = assign;
+
+function searchParamsToUrlQuery(searchParams) {
+  var query = {};
+  searchParams.forEach(function (value, key) {
+    if (typeof query[key] === 'undefined') {
+      query[key] = value;
+    } else if (Array.isArray(query[key])) {
+      ;
+      query[key].push(value);
+    } else {
+      query[key] = [query[key], value];
+    }
+  });
+  return query;
+}
+
+function stringifyUrlQueryParam(param) {
+  if (typeof param === 'string' || typeof param === 'number' && !isNaN(param) || typeof param === 'boolean') {
+    return String(param);
+  } else {
+    return '';
+  }
+}
+
+function urlQueryToSearchParams(urlQuery) {
+  var result = new URLSearchParams();
+  Object.entries(urlQuery).forEach(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        key = _ref2[0],
+        value = _ref2[1];
+
+    if (Array.isArray(value)) {
+      value.forEach(function (item) {
+        return result.append(key, stringifyUrlQueryParam(item));
+      });
+    } else {
+      result.set(key, stringifyUrlQueryParam(value));
+    }
+  });
+  return result;
+}
+
+function assign(target) {
+  for (var _len = arguments.length, searchParamsList = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    searchParamsList[_key - 1] = arguments[_key];
+  }
+
+  searchParamsList.forEach(function (searchParams) {
+    Array.from(searchParams.keys()).forEach(function (key) {
+      return target["delete"](key);
+    });
+    searchParams.forEach(function (value, key) {
+      return target.append(key, value);
+    });
+  });
+  return target;
+}
+
+/***/ }),
+
+/***/ "6D7l":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.formatUrl = formatUrl;
+
+var querystring = _interopRequireWildcard(__webpack_require__("3WeD"));
+
+function _getRequireWildcardCache() {
+  if (typeof WeakMap !== "function") return null;
+  var cache = new WeakMap();
+
+  _getRequireWildcardCache = function _getRequireWildcardCache() {
+    return cache;
+  };
+
+  return cache;
+}
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  }
+
+  if (obj === null || typeof obj !== "object" && typeof obj !== "function") {
+    return {
+      "default": obj
+    };
+  }
+
+  var cache = _getRequireWildcardCache();
+
+  if (cache && cache.has(obj)) {
+    return cache.get(obj);
+  }
+
+  var newObj = {};
+  var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor;
+
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null;
+
+      if (desc && (desc.get || desc.set)) {
+        Object.defineProperty(newObj, key, desc);
+      } else {
+        newObj[key] = obj[key];
+      }
+    }
+  }
+
+  newObj["default"] = obj;
+
+  if (cache) {
+    cache.set(obj, newObj);
+  }
+
+  return newObj;
+} // Format function modified from nodejs
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -137,70 +267,48 @@ module.exports = _interopRequireWildcard;
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+var slashedProtocols = /https?|ftp|gopher|file/;
 
-var stringifyPrimitive = function(v) {
-  switch (typeof v) {
-    case 'string':
-      return v;
+function formatUrl(urlObj) {
+  var auth = urlObj.auth,
+      hostname = urlObj.hostname;
+  var protocol = urlObj.protocol || '';
+  var pathname = urlObj.pathname || '';
+  var hash = urlObj.hash || '';
+  var query = urlObj.query || '';
+  var host = false;
+  auth = auth ? encodeURIComponent(auth).replace(/%3A/i, ':') + '@' : '';
 
-    case 'boolean':
-      return v ? 'true' : 'false';
+  if (urlObj.host) {
+    host = auth + urlObj.host;
+  } else if (hostname) {
+    host = auth + (~hostname.indexOf(':') ? "[".concat(hostname, "]") : hostname);
 
-    case 'number':
-      return isFinite(v) ? v : '';
-
-    default:
-      return '';
-  }
-};
-
-module.exports = function(obj, sep, eq, name) {
-  sep = sep || '&';
-  eq = eq || '=';
-  if (obj === null) {
-    obj = undefined;
+    if (urlObj.port) {
+      host += ':' + urlObj.port;
+    }
   }
 
-  if (typeof obj === 'object') {
-    return map(objectKeys(obj), function(k) {
-      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
-      if (isArray(obj[k])) {
-        return map(obj[k], function(v) {
-          return ks + encodeURIComponent(stringifyPrimitive(v));
-        }).join(sep);
-      } else {
-        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
-      }
-    }).join(sep);
-
+  if (query && typeof query === 'object') {
+    query = String(querystring.urlQueryToSearchParams(query));
   }
 
-  if (!name) return '';
-  return encodeURIComponent(stringifyPrimitive(name)) + eq +
-         encodeURIComponent(stringifyPrimitive(obj));
-};
+  var search = urlObj.search || query && "?".concat(query) || '';
+  if (protocol && protocol.substr(-1) !== ':') protocol += ':';
 
-var isArray = Array.isArray || function (xs) {
-  return Object.prototype.toString.call(xs) === '[object Array]';
-};
-
-function map (xs, f) {
-  if (xs.map) return xs.map(f);
-  var res = [];
-  for (var i = 0; i < xs.length; i++) {
-    res.push(f(xs[i], i));
+  if (urlObj.slashes || (!protocol || slashedProtocols.test(protocol)) && host !== false) {
+    host = '//' + (host || '');
+    if (pathname && pathname[0] !== '/') pathname = '/' + pathname;
+  } else if (!host) {
+    host = '';
   }
-  return res;
+
+  if (hash && hash[0] !== '#') hash = '#' + hash;
+  if (search && search[0] !== '?') search = '?' + search;
+  pathname = pathname.replace(/[?#]/g, encodeURIComponent);
+  search = search.replace('#', '%23');
+  return "".concat(protocol).concat(host).concat(pathname).concat(search).concat(hash);
 }
-
-var objectKeys = Object.keys || function (obj) {
-  var res = [];
-  for (var key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) res.push(key);
-  }
-  return res;
-};
-
 
 /***/ }),
 
@@ -232,11 +340,10 @@ var assign=Object.assign.bind(Object);module.exports=assign;module.exports.defau
 
 /***/ }),
 
-/***/ "QmWs":
+/***/ "S3md":
 /***/ (function(module, exports, __webpack_require__) {
 
-var e,t=(e=__webpack_require__("s4NR"))&&"object"==typeof e&&"default"in e?e.default:e,r=/https?|ftp|gopher|file/;function o(e){"string"==typeof e&&(e=g(e));var o=function(e,t,r){var o=e.auth,a=e.hostname,s=e.protocol||"",c=e.pathname||"",h=e.hash||"",p=e.query||"",n=!1;o=o?encodeURIComponent(o).replace(/%3A/i,":")+"@":"",e.host?n=o+e.host:a&&(n=o+(~a.indexOf(":")?"["+a+"]":a),e.port&&(n+=":"+e.port)),p&&"object"==typeof p&&(p=t.encode(p));var l=e.search||p&&"?"+p||"";return s&&":"!==s.substr(-1)&&(s+=":"),e.slashes||(!s||r.test(s))&&!1!==n?(n="//"+(n||""),c&&"/"!==c[0]&&(c="/"+c)):n||(n=""),h&&"#"!==h[0]&&(h="#"+h),l&&"?"!==l[0]&&(l="?"+l),{protocol:s,host:n,pathname:c=c.replace(/[?#]/g,encodeURIComponent),search:l=l.replace("#","%23"),hash:h}}(e,t,r);return""+o.protocol+o.host+o.pathname+o.search+o.hash}var a="http://",s="w.w",c=a+s,h=/^([a-z0-9.+-]*:\/\/\/)([a-z0-9.+-]:\/*)?/i,p=/https?|ftp|gopher|file/;function n(e,t){var r="string"==typeof e?g(e):e;e="object"==typeof e?o(e):e;var s=g(t),n="";r.protocol&&!r.slashes&&(n=r.protocol,e=e.replace(r.protocol,""),n+="/"===t[0]||"/"===e[0]?"/":""),n&&s.protocol&&(n="",s.slashes||(n=s.protocol,t=t.replace(s.protocol,"")));var l=e.match(h);l&&!s.protocol&&(e=e.substr((n=l[1]+(l[2]||"")).length),/^\/\/[^/]/.test(t)&&(n=n.slice(0,-1)));var i=new URL(e,c+"/"),f=new URL(t,i).toString().replace(c,""),u=s.protocol||r.protocol;return u+=r.slashes||s.slashes?"//":"",!n&&u?f=f.replace(a,u):n&&(f=f.replace(a,"")),p.test(f)||~t.indexOf(".")||"/"===e.slice(-1)||"/"===t.slice(-1)||"/"!==f.slice(-1)||(f=f.slice(0,-1)),n&&(f=n+("/"===f[0]?f.substr(1):f)),f}function l(){}l.parse=g,l.format=o,l.resolve=n,l.resolveObject=n;var i=/^https?|ftp|gopher|file/,f=/^(.*?)([#?].*)/,u=/^([a-z0-9.+-]*:)(\/{0,3})(.*)/i,m=/^([a-z0-9.+-]*:)?\/\/\/*/i,v=/^([a-z0-9.+-]*:)(\/{0,2})\[(.*)\]$/i;function d(e){try{return decodeURI(e)}catch(t){return e}}function g(e,r,a){if(void 0===r&&(r=!1),void 0===a&&(a=!1),e&&"object"==typeof e&&e instanceof l)return e;var h=(e=e.trim()).match(f);e=h?d(h[1]).replace(/\\/g,"/")+h[2]:d(e).replace(/\\/g,"/"),v.test(e)&&"/"!==e.slice(-1)&&(e+="/");var p=!/(^javascript)/.test(e)&&e.match(u),n=m.test(e),g="";p&&(i.test(p[1])||(g=p[1].toLowerCase(),e=""+p[2]+p[3]),p[2]||(n=!1,i.test(p[1])?(g=p[1],e=""+p[3]):e="//"+p[3]),3!==p[2].length&&1!==p[2].length||(g=p[1],e="/"+p[3]));var b,y=(h?h[1]:e).match(/(:[0-9]+)/),j="";y&&y[1]&&3===y[1].length&&(e=e.replace(j=y[1],j+"00"));var w=new l,x="",U="";try{b=new URL(e)}catch(t){x=t,g||a||!/^\/\//.test(e)||/^\/\/.+[@.]/.test(e)||(U="/",e=e.substr(1));try{b=new URL(e,c)}catch(e){return w.protocol=g,w.href=g,w}}w.slashes=n&&!U,w.host=b.host===s?"":b.host,w.hostname=b.hostname===s?"":b.hostname.replace(/(\[|\])/g,""),w.protocol=x?g||null:b.protocol,w.search=b.search.replace(/\\/g,"%5C"),w.hash=b.hash.replace(/\\/g,"%5C");var R=e.split("#");!w.search&&~R[0].indexOf("?")&&(w.search="?"),w.hash||""!==R[1]||(w.hash="#"),w.query=r?t.decode(b.search.substr(1)):w.search.substr(1),w.pathname=U+d(b.pathname).replace(/"/g,"%22"),"about:"===w.protocol&&"blank"===w.pathname&&(w.protocol="",w.pathname=""),x&&"/"!==e[0]&&(w.pathname=w.pathname.substr(1)),g&&!i.test(g)&&"/"!==e.slice(-1)&&"/"===w.pathname&&(w.pathname=""),w.path=w.pathname+w.search,w.auth=[b.username,b.password].map(decodeURIComponent).filter(Boolean).join(":"),w.port=b.port,j&&(w.host=w.host.replace(j+"00",j),w.port=w.port.slice(0,-2)),w.href=U?""+w.pathname+w.search+w.hash:o(w);var O=/^(file)/.test(w.href)?["host","hostname"]:[];return Object.keys(w).forEach(function(e){~O.indexOf(e)||(w[e]=w[e]||null)}),w}exports.parse=g,exports.format=o,exports.resolve=n,exports.resolveObject=function(e,t){return g(n(e,t))},exports.Url=l;
-//# sourceMappingURL=index.js.map
+"use strict";
 
 
 /***/ }),
@@ -310,6 +417,33 @@ module.exports = _arrayLikeToArray;
 
 /***/ }),
 
+/***/ "X24+":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.removePathTrailingSlash = removePathTrailingSlash;
+exports.normalizePathTrailingSlash = void 0;
+/**
+* Removes the trailing slash of a path if there is one. Preserves the root path `/`.
+*/
+
+function removePathTrailingSlash(path) {
+  return path.endsWith('/') && path !== '/' ? path.slice(0, -1) : path;
+}
+/**
+* Normalizes the trailing slash of a path according to the `trailingSlash` option
+* in `next.config.js`.
+*/
+
+
+var normalizePathTrailingSlash =  false ? undefined : removePathTrailingSlash;
+exports.normalizePathTrailingSlash = normalizePathTrailingSlash;
+
+/***/ }),
+
 /***/ "YTqd":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -324,41 +458,54 @@ function escapeRegex(str) {
   return str.replace(/[|\\{}()[\]^$+*?.-]/g, '\\$&');
 }
 
-function getRouteRegex(normalizedRoute) {
-  // Escape all characters that could be considered RegEx
-  var escapedRoute = escapeRegex(normalizedRoute.replace(/\/$/, '') || '/');
-  var groups = {};
-  var groupIndex = 1;
-  var parameterizedRoute = escapedRoute.replace(/\/\\\[([^/]+?)\\\](?=\/|$)/g, function (_, $1) {
-    var isOptional = /^\\\[.*\\\]$/.test($1);
+function parseParameter(param) {
+  var optional = param.startsWith('[') && param.endsWith(']');
 
-    if (isOptional) {
-      $1 = $1.slice(2, -2);
-    }
+  if (optional) {
+    param = param.slice(1, -1);
+  }
 
-    var isCatchAll = /^(\\\.){3}/.test($1);
+  var repeat = param.startsWith('...');
 
-    if (isCatchAll) {
-      $1 = $1.slice(6);
-    }
-
-    groups[$1 // Un-escape key
-    .replace(/\\([|\\{}()[\]^$+*?.-])/g, '$1') // eslint-disable-next-line no-sequences
-    ] = {
-      pos: groupIndex++,
-      repeat: isCatchAll
-    };
-    return isCatchAll ? isOptional ? '(?:/(.+?))?' : '/(.+?)' : '/([^/]+?)';
-  });
-  var namedParameterizedRoute; // dead code eliminate for browser since it's only needed
-  // while generating routes-manifest
-
-  if (false) {}
+  if (repeat) {
+    param = param.slice(3);
+  }
 
   return {
-    re: new RegExp('^' + parameterizedRoute + '(?:/)?$', 'i'),
-    groups: groups,
-    namedRegex: namedParameterizedRoute ? "^".concat(namedParameterizedRoute, "(?:/)?$") : undefined
+    key: param,
+    repeat: repeat,
+    optional: optional
+  };
+}
+
+function getRouteRegex(normalizedRoute) {
+  var segments = (normalizedRoute.replace(/\/$/, '') || '/').slice(1).split('/');
+  var groups = {};
+  var groupIndex = 1;
+  var parameterizedRoute = segments.map(function (segment) {
+    if (segment.startsWith('[') && segment.endsWith(']')) {
+      var _parseParameter = parseParameter(segment.slice(1, -1)),
+          key = _parseParameter.key,
+          optional = _parseParameter.optional,
+          repeat = _parseParameter.repeat;
+
+      groups[key] = {
+        pos: groupIndex++,
+        repeat: repeat,
+        optional: optional
+      };
+      return repeat ? optional ? '(?:/(.+?))?' : '/(.+?)' : '/([^/]+?)';
+    } else {
+      return "/".concat(escapeRegex(segment));
+    }
+  }).join(''); // dead code eliminate for browser since it's only needed
+  // while generating routes-manifest
+
+  if (false) { var namedParameterizedRoute, routeKeys, getSafeRouteKey, routeKeyCharLength, routeKeyCharCode; }
+
+  return {
+    re: new RegExp("^".concat(parameterizedRoute, "(?:/)?$")),
+    groups: groups
   };
 }
 
@@ -453,7 +600,6 @@ function mitt() {
     },
     off: function off(type, handler) {
       if (all[type]) {
-        // tslint:disable-next-line:no-bitwise
         all[type].splice(all[type].indexOf(handler) >>> 0, 1);
       }
     },
@@ -479,22 +625,29 @@ function mitt() {
 "use strict";
 
 
+var _slicedToArray = __webpack_require__("J4zp");
+
 var _regeneratorRuntime = __webpack_require__("o0o1");
 
 var _asyncToGenerator = __webpack_require__("yXPU");
-
-var _slicedToArray = __webpack_require__("J4zp");
 
 var _classCallCheck = __webpack_require__("lwsE");
 
 var _createClass = __webpack_require__("W8MJ");
 
 exports.__esModule = true;
+exports.hasBasePath = hasBasePath;
 exports.addBasePath = addBasePath;
 exports.delBasePath = delBasePath;
+exports.isLocalURL = isLocalURL;
+exports.interpolateAs = interpolateAs;
+exports.resolveHref = resolveHref;
+exports.markLoadingError = markLoadingError;
 exports["default"] = void 0;
 
-var _url2 = __webpack_require__("QmWs");
+var _normalizeTrailingSlash = __webpack_require__("X24+");
+
+var _denormalizePagePath = __webpack_require__("wkBG");
 
 var _mitt = _interopRequireDefault(__webpack_require__("dZ6Y"));
 
@@ -502,9 +655,17 @@ var _utils = __webpack_require__("g/15");
 
 var _isDynamic = __webpack_require__("/jkW");
 
+var _parseRelativeUrl = __webpack_require__("hS4m");
+
+var _querystring = __webpack_require__("3WeD");
+
+var _resolveRewrites = _interopRequireDefault(__webpack_require__("S3md"));
+
 var _routeMatcher = __webpack_require__("gguc");
 
 var _routeRegex = __webpack_require__("YTqd");
+
+var _escapePathDelimiters = _interopRequireDefault(__webpack_require__("fcRV"));
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
@@ -517,65 +678,181 @@ function _interopRequireDefault(obj) {
 
 var basePath =  false || '';
 
+function buildCancellationError() {
+  return Object.assign(new Error('Route Cancelled'), {
+    cancelled: true
+  });
+}
+
+function hasBasePath(path) {
+  return path === basePath || path.startsWith(basePath + '/');
+}
+
 function addBasePath(path) {
-  return path.indexOf(basePath) !== 0 ? basePath + path : path;
+  // we only add the basepath on relative urls
+  return basePath && path.startsWith('/') ? path === '/' ? (0, _normalizeTrailingSlash.normalizePathTrailingSlash)(basePath) : basePath + path : path;
 }
 
 function delBasePath(path) {
-  return path.indexOf(basePath) === 0 ? path.substr(basePath.length) || '/' : path;
+  return path.slice(basePath.length) || '/';
+}
+/**
+* Detects whether a given url is routable by the Next.js router (browser only).
+*/
+
+
+function isLocalURL(url) {
+  if (url.startsWith('/')) return true;
+
+  try {
+    // absolute urls can be local if they are on the same origin
+    var locationOrigin = (0, _utils.getLocationOrigin)();
+    var resolved = new URL(url, locationOrigin);
+    return resolved.origin === locationOrigin && hasBasePath(resolved.pathname);
+  } catch (_) {
+    return false;
+  }
 }
 
-function toRoute(path) {
-  return path.replace(/\/$/, '') || '/';
-}
+function interpolateAs(route, asPathname, query) {
+  var interpolatedRoute = '';
+  var dynamicRegex = (0, _routeRegex.getRouteRegex)(route);
+  var dynamicGroups = dynamicRegex.groups;
+  var dynamicMatches = // Try to match the dynamic route against the asPath
+  (asPathname !== route ? (0, _routeMatcher.getRouteMatcher)(dynamicRegex)(asPathname) : '') || // Fall back to reading the values from the href
+  // TODO: should this take priority; also need to change in the router.
+  query;
+  interpolatedRoute = route;
+  var params = Object.keys(dynamicGroups);
 
-var prepareRoute = function prepareRoute(path) {
-  return toRoute(!path || path === '/' ? '/index' : path);
-};
+  if (!params.every(function (param) {
+    var value = dynamicMatches[param] || '';
+    var _dynamicGroups$param = dynamicGroups[param],
+        repeat = _dynamicGroups$param.repeat,
+        optional = _dynamicGroups$param.optional; // support single-level catch-all
+    // TODO: more robust handling for user-error (passing `/`)
 
-function fetchNextData(pathname, query, isServerRender, cb) {
-  var attempts = isServerRender ? 3 : 1;
+    var replaced = "[".concat(repeat ? '...' : '').concat(param, "]");
 
-  function getResponse() {
-    return fetch((0, _utils.formatWithValidation)({
-      pathname: addBasePath( // @ts-ignore __NEXT_DATA__
-      "/_next/data/".concat(__NEXT_DATA__.buildId).concat(delBasePath(pathname), ".json")),
-      query: query
-    }), {
-      // Cookies are required to be present for Next.js' SSG "Preview Mode".
-      // Cookies may also be required for `getServerSideProps`.
-      //
-      // > `fetch` won’t send cookies, unless you set the credentials init
-      // > option.
-      // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-      //
-      // > For maximum browser compatibility when it comes to sending &
-      // > receiving cookies, always supply the `credentials: 'same-origin'`
-      // > option instead of relying on the default.
-      // https://github.com/github/fetch#caveats
-      credentials: 'same-origin'
-    }).then(function (res) {
-      if (!res.ok) {
-        if (--attempts > 0 && res.status >= 500) {
-          return getResponse();
-        }
+    if (optional) {
+      replaced = "".concat(!value ? '/' : '', "[").concat(replaced, "]");
+    }
 
-        throw new Error("Failed to load static props");
-      }
-
-      return res.json();
-    });
+    if (repeat && !Array.isArray(value)) value = [value];
+    return (optional || param in dynamicMatches) && ( // Interpolate group into data URL if present
+    interpolatedRoute = interpolatedRoute.replace(replaced, repeat ? value.map(_escapePathDelimiters["default"]).join('/') : (0, _escapePathDelimiters["default"])(value)) || '/');
+  })) {
+    interpolatedRoute = ''; // did not satisfy all requirements
+    // n.b. We ignore this error because we handle warning for this case in
+    // development in the `<Link>` component directly.
   }
 
-  return getResponse().then(function (data) {
-    return cb ? cb(data) : data;
-  })["catch"](function (err) {
+  return {
+    params: params,
+    result: interpolatedRoute
+  };
+}
+
+function omitParmsFromQuery(query, params) {
+  var filteredQuery = {};
+  Object.keys(query).forEach(function (key) {
+    if (!params.includes(key)) {
+      filteredQuery[key] = query[key];
+    }
+  });
+  return filteredQuery;
+}
+/**
+* Resolves a given hyperlink with a certain router state (basePath not included).
+* Preserves absolute urls.
+*/
+
+
+function resolveHref(currentPath, href, resolveAs) {
+  // we use a dummy base url for relative urls
+  var base = new URL(currentPath, 'http://n');
+  var urlAsString = typeof href === 'string' ? href : (0, _utils.formatWithValidation)(href);
+
+  try {
+    var finalUrl = new URL(urlAsString, base);
+    finalUrl.pathname = (0, _normalizeTrailingSlash.normalizePathTrailingSlash)(finalUrl.pathname);
+    var interpolatedAs = '';
+
+    if ((0, _isDynamic.isDynamicRoute)(finalUrl.pathname) && finalUrl.searchParams && resolveAs) {
+      var query = (0, _querystring.searchParamsToUrlQuery)(finalUrl.searchParams);
+
+      var _interpolateAs = interpolateAs(finalUrl.pathname, finalUrl.pathname, query),
+          result = _interpolateAs.result,
+          params = _interpolateAs.params;
+
+      if (result) {
+        interpolatedAs = (0, _utils.formatWithValidation)({
+          pathname: result,
+          hash: finalUrl.hash,
+          query: omitParmsFromQuery(query, params)
+        });
+      }
+    } // if the origin didn't change, it means we received a relative href
+
+
+    var resolvedHref = finalUrl.origin === base.origin ? finalUrl.href.slice(finalUrl.origin.length) : finalUrl.href;
+    return resolveAs ? [resolvedHref, interpolatedAs || resolvedHref] : resolvedHref;
+  } catch (_) {
+    return resolveAs ? [urlAsString] : urlAsString;
+  }
+}
+
+var PAGE_LOAD_ERROR = Symbol('PAGE_LOAD_ERROR');
+
+function markLoadingError(err) {
+  return Object.defineProperty(err, PAGE_LOAD_ERROR, {});
+}
+
+function prepareUrlAs(router, url, as) {
+  // If url and as provided as an object representation,
+  // we'll format them into the string version here.
+  return {
+    url: addBasePath(resolveHref(router.pathname, url)),
+    as: as ? addBasePath(resolveHref(router.pathname, as)) : as
+  };
+}
+
+var manualScrollRestoration =  false && false;
+
+function fetchRetry(url, attempts) {
+  return fetch(url, {
+    // Cookies are required to be present for Next.js' SSG "Preview Mode".
+    // Cookies may also be required for `getServerSideProps`.
+    //
+    // > `fetch` won’t send cookies, unless you set the credentials init
+    // > option.
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    //
+    // > For maximum browser compatibility when it comes to sending &
+    // > receiving cookies, always supply the `credentials: 'same-origin'`
+    // > option instead of relying on the default.
+    // https://github.com/github/fetch#caveats
+    credentials: 'same-origin'
+  }).then(function (res) {
+    if (!res.ok) {
+      if (attempts > 1 && res.status >= 500) {
+        return fetchRetry(url, attempts - 1);
+      }
+
+      throw new Error("Failed to load static props");
+    }
+
+    return res.json();
+  });
+}
+
+function fetchNextData(dataHref, isServerRender) {
+  return fetchRetry(dataHref, isServerRender ? 3 : 1)["catch"](function (err) {
     // We should only trigger a server-side transition if this was caused
     // on a client-side transition. Otherwise, we'd get into an infinite
     // loop.
     if (!isServerRender) {
-      ;
-      err.code = 'PAGE_LOAD_ERROR';
+      markLoadingError(err);
     }
 
     throw err;
@@ -587,7 +864,7 @@ var Router = /*#__PURE__*/function () {
   * Map of all components loaded in `Router`
   */
   // Static Data Cache
-  function Router(_pathname, _query, _as2, _ref) {
+  function Router(_pathname, _query, _as, _ref) {
     var _this = this;
 
     var initialProps = _ref.initialProps,
@@ -595,6 +872,7 @@ var Router = /*#__PURE__*/function () {
         App = _ref.App,
         wrapApp = _ref.wrapApp,
         Component = _ref.Component,
+        initialStyleSheets = _ref.initialStyleSheets,
         err = _ref.err,
         subscription = _ref.subscription,
         isFallback = _ref.isFallback;
@@ -616,9 +894,13 @@ var Router = /*#__PURE__*/function () {
     this._wrapApp = void 0;
     this.isSsr = void 0;
     this.isFallback = void 0;
+    this._inFlightRoute = void 0;
+    this._shallow = void 0;
 
     this.onPopState = function (e) {
-      if (!e.state) {
+      var state = e.state;
+
+      if (!state) {
         // We get state as undefined for two reasons.
         //  1. With older safari (< 8) and older chrome (< 34)
         //  2. When the URL changed with #
@@ -628,57 +910,47 @@ var Router = /*#__PURE__*/function () {
         // But we can simply replace the state with the new changes.
         // Actually, for (1) we don't need to nothing. But it's hard to detect that event.
         // So, doing the following for (1) does no harm.
-        var pathname = _this.pathname,
+        var _pathname2 = _this.pathname,
             query = _this.query;
 
         _this.changeState('replaceState', (0, _utils.formatWithValidation)({
-          pathname: pathname,
+          pathname: addBasePath(_pathname2),
           query: query
         }), (0, _utils.getURL)());
 
         return;
-      } // Make sure we don't re-render on initial load,
+      }
+
+      if (!state.__N) {
+        return;
+      }
+
+      var url = state.url,
+          as = state.as,
+          options = state.options;
+
+      var _ref2 = (0, _parseRelativeUrl.parseRelativeUrl)(url),
+          pathname = _ref2.pathname; // Make sure we don't re-render on initial load,
       // can be caused by navigating back from an external site
 
 
-      if (e.state && _this.isSsr && e.state.as === _this.asPath && (0, _url2.parse)(e.state.url).pathname === _this.pathname) {
+      if (_this.isSsr && as === _this.asPath && pathname === _this.pathname) {
         return;
       } // If the downstream application returns falsy, return.
       // They will then be responsible for handling the event.
 
 
-      if (_this._bps && !_this._bps(e.state)) {
+      if (_this._bps && !_this._bps(state)) {
         return;
       }
 
-      var _e$state = e.state,
-          url = _e$state.url,
-          as = _e$state.as,
-          options = _e$state.options;
-
-      if (false) {}
-
-      _this.replace(url, as, options);
-    };
-
-    this._getStaticData = function (asPath) {
-      var pathname = prepareRoute((0, _url2.parse)(asPath).pathname);
-      return  true && _this.sdc[pathname] ? Promise.resolve(_this.sdc[pathname]) : fetchNextData(pathname, null, _this.isSsr, function (data) {
-        return _this.sdc[pathname] = data;
-      });
-    };
-
-    this._getServerData = function (asPath) {
-      var _ref2 = (0, _url2.parse)(asPath, true),
-          pathname = _ref2.pathname,
-          query = _ref2.query;
-
-      pathname = prepareRoute(pathname);
-      return fetchNextData(pathname, query, _this.isSsr);
+      _this.change('replaceState', url, as, Object.assign({}, options, {
+        shallow: options.shallow && _this._shallow
+      }));
     }; // represents the current component key
 
 
-    this.route = toRoute(_pathname); // set up the component cache (by route keys)
+    this.route = (0, _normalizeTrailingSlash.removePathTrailingSlash)(_pathname); // set up the component cache (by route keys)
 
     this.components = {}; // We should not keep the cache, if there's an error
     // Otherwise, this cause issues when when going back and
@@ -687,6 +959,7 @@ var Router = /*#__PURE__*/function () {
     if (_pathname !== '/_error') {
       this.components[this.route] = {
         Component: Component,
+        styleSheets: initialStyleSheets,
         props: initialProps,
         err: err,
         __N_SSG: initialProps && initialProps.__N_SSG,
@@ -695,7 +968,10 @@ var Router = /*#__PURE__*/function () {
     }
 
     this.components['/_app'] = {
-      Component: App
+      Component: App,
+      styleSheets: [
+        /* /_app does not need its stylesheets managed */
+      ]
     }; // Backwards compat for Router.router.events
     // TODO: Should be remove the following major version as it was never documented
 
@@ -706,7 +982,7 @@ var Router = /*#__PURE__*/function () {
     // until after mount to prevent hydration mismatch
 
     this.asPath = // @ts-ignore this is temporarily global (attached to window)
-    (0, _isDynamic.isDynamicRoute)(_pathname) && __NEXT_DATA__.autoExport ? _pathname : _as2;
+    (0, _isDynamic.isDynamicRoute)(_pathname) && __NEXT_DATA__.autoExport ? _pathname : _as;
     this.basePath = basePath;
     this.sub = subscription;
     this.clc = null;
@@ -719,47 +995,23 @@ var Router = /*#__PURE__*/function () {
     if (true) {
       // make sure "as" doesn't start with double slashes or else it can
       // throw an error as it's considered invalid
-      if (_as2.substr(0, 2) !== '//') {
+      if (_as.substr(0, 2) !== '//') {
         // in order for `e.state` to work on the `onpopstate` event
         // we have to register the initial route upon initialization
         this.changeState('replaceState', (0, _utils.formatWithValidation)({
-          pathname: _pathname,
+          pathname: addBasePath(_pathname),
           query: _query
-        }), _as2);
+        }), (0, _utils.getURL)());
       }
 
-      window.addEventListener('popstate', this.onPopState);
-    }
-  } // @deprecated backwards compatibility even though it's a private method.
+      window.addEventListener('popstate', this.onPopState); // enable custom scroll restoration handling when available
+      // otherwise fallback to browser's default handling
 
+      if (false) { var debouncedScrollSave, scrollDebounceTimeout; }
+    }
+  }
 
   _createClass(Router, [{
-    key: "update",
-    value: function update(route, mod) {
-      var Component = mod["default"] || mod;
-      var data = this.components[route];
-
-      if (!data) {
-        throw new Error("Cannot update unavailable route: ".concat(route));
-      }
-
-      var newData = Object.assign({}, data, {
-        Component: Component,
-        __N_SSG: mod.__N_SSG,
-        __N_SSP: mod.__N_SSP
-      });
-      this.components[route] = newData; // pages/_app.js updated
-
-      if (route === '/_app') {
-        this.notify(this.components[this.route]);
-        return;
-      }
-
-      if (route === this.route) {
-        this.notify(newData);
-      }
-    }
-  }, {
     key: "reload",
     value: function reload() {
       window.location.reload();
@@ -785,6 +1037,12 @@ var Router = /*#__PURE__*/function () {
     value: function push(url) {
       var as = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : url;
       var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      ;
+
+      var _prepareUrlAs = prepareUrlAs(this, url, as);
+
+      url = _prepareUrlAs.url;
+      as = _prepareUrlAs.as;
       return this.change('pushState', url, as, options);
     }
     /**
@@ -799,126 +1057,251 @@ var Router = /*#__PURE__*/function () {
     value: function replace(url) {
       var as = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : url;
       var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      ;
+
+      var _prepareUrlAs2 = prepareUrlAs(this, url, as);
+
+      url = _prepareUrlAs2.url;
+      as = _prepareUrlAs2.as;
       return this.change('replaceState', url, as, options);
     }
   }, {
     key: "change",
-    value: function change(method, _url, _as, options) {
-      var _this2 = this;
+    value: function () {
+      var _change = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(method, url, as, options) {
+        var _this2 = this;
 
-      return new Promise(function (resolve, reject) {
-        if (!options._h) {
-          _this2.isSsr = false;
-        } // marking route changes as a navigation start entry
+        var cleanedAs, pages, _yield$this$pageLoade, rewrites, parsed, _parsed, pathname, query, route, _options$shallow, shallow, resolvedAs, potentialHref, parsedAs, asPathname, routeRegex, routeMatch, shouldInterpolate, interpolatedAs, missingParams, routeInfo, error, props, __N_SSG, __N_SSP, destination, parsedHref, appComp;
 
+        return _regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (isLocalURL(url)) {
+                  _context.next = 3;
+                  break;
+                }
 
-        if (_utils.ST) {
-          performance.mark('routeChange');
-        } // If url and as provided as an object representation,
-        // we'll format them into the string version here.
+                window.location.href = url;
+                return _context.abrupt("return", false);
 
-
-        var url = typeof _url === 'object' ? (0, _utils.formatWithValidation)(_url) : _url;
-        var as = typeof _as === 'object' ? (0, _utils.formatWithValidation)(_as) : _as;
-        url = addBasePath(url);
-        as = addBasePath(as); // Add the ending slash to the paths. So, we can serve the
-        // "<page>/index.html" directly for the SSR page.
-
-        if (false) { var rewriteUrlForNextExport; }
-
-        _this2.abortComponentLoad(as); // If the url change is only related to a hash change
-        // We should not proceed. We should only change the state.
-        // WARNING: `_h` is an internal option for handing Next.js client-side
-        // hydration. Your app should _never_ use this property. It may change at
-        // any time without notice.
+              case 3:
+                if (!options._h) {
+                  this.isSsr = false;
+                } // marking route changes as a navigation start entry
 
 
-        if (!options._h && _this2.onlyAHashChange(as)) {
-          _this2.asPath = as;
-          Router.events.emit('hashChangeStart', as);
+                if (_utils.ST) {
+                  performance.mark('routeChange');
+                }
 
-          _this2.changeState(method, url, as, options);
+                if (this._inFlightRoute) {
+                  this.abortComponentLoad(this._inFlightRoute);
+                }
 
-          _this2.scrollToHash(as);
+                cleanedAs = hasBasePath(as) ? delBasePath(as) : as;
+                this._inFlightRoute = as; // If the url change is only related to a hash change
+                // We should not proceed. We should only change the state.
+                // WARNING: `_h` is an internal option for handing Next.js client-side
+                // hydration. Your app should _never_ use this property. It may change at
+                // any time without notice.
 
-          Router.events.emit('hashChangeComplete', as);
-          return resolve(true);
-        }
+                if (!(!options._h && this.onlyAHashChange(cleanedAs))) {
+                  _context.next = 16;
+                  break;
+                }
 
-        var _ref3 = (0, _url2.parse)(url, true),
-            pathname = _ref3.pathname,
-            query = _ref3.query,
-            protocol = _ref3.protocol;
+                this.asPath = cleanedAs;
+                Router.events.emit('hashChangeStart', as); // TODO: do we need the resolved href when only a hash change?
 
-        if (!pathname || protocol) {
-          if (false) {}
+                this.changeState(method, url, as, options);
+                this.scrollToHash(cleanedAs);
+                this.notify(this.components[this.route]);
+                Router.events.emit('hashChangeComplete', as);
+                return _context.abrupt("return", true);
 
-          return resolve(false);
-        } // If asked to change the current URL we should reload the current page
-        // (not location.reload() but reload getInitialProps and other Next.js stuffs)
-        // We also need to set the method = replaceState always
-        // as this should not go into the history (That's how browsers work)
-        // We should compare the new asPath to the current asPath, not the url
+              case 16:
+                _context.next = 18;
+                return this.pageLoader.getPageList();
+
+              case 18:
+                pages = _context.sent;
+                _context.next = 21;
+                return this.pageLoader.promisedBuildManifest;
+
+              case 21:
+                _yield$this$pageLoade = _context.sent;
+                rewrites = _yield$this$pageLoade.__rewrites;
+                parsed = (0, _parseRelativeUrl.parseRelativeUrl)(url);
+                _parsed = parsed, pathname = _parsed.pathname, query = _parsed.query;
+                parsed = this._resolveHref(parsed, pages);
+
+                if (parsed.pathname !== pathname) {
+                  pathname = parsed.pathname;
+                  url = (0, _utils.formatWithValidation)(parsed);
+                } // url and as should always be prefixed with basePath by this
+                // point by either next/link or router.push/replace so strip the
+                // basePath from the pathname to match the pages dir 1-to-1
 
 
-        if (!_this2.urlIsNew(as)) {
-          method = 'replaceState';
-        }
+                pathname = pathname ? (0, _normalizeTrailingSlash.removePathTrailingSlash)(delBasePath(pathname)) : pathname; // If asked to change the current URL we should reload the current page
+                // (not location.reload() but reload getInitialProps and other Next.js stuffs)
+                // We also need to set the method = replaceState always
+                // as this should not go into the history (That's how browsers work)
+                // We should compare the new asPath to the current asPath, not the url
 
-        var route = toRoute(pathname);
-        var _options$shallow = options.shallow,
-            shallow = _options$shallow === void 0 ? false : _options$shallow;
+                if (!this.urlIsNew(cleanedAs)) {
+                  method = 'replaceState';
+                }
 
-        if ((0, _isDynamic.isDynamicRoute)(route)) {
-          var _ref4 = (0, _url2.parse)(as),
-              asPathname = _ref4.pathname;
+                route = (0, _normalizeTrailingSlash.removePathTrailingSlash)(pathname);
+                _options$shallow = options.shallow, shallow = _options$shallow === void 0 ? false : _options$shallow; // we need to resolve the as value using rewrites for dynamic SSG
+                // pages to allow building the data URL correctly
 
-          var routeRegex = (0, _routeRegex.getRouteRegex)(route);
-          var routeMatch = (0, _routeMatcher.getRouteMatcher)(routeRegex)(asPathname);
+                resolvedAs = as;
 
-          if (!routeMatch) {
-            var missingParams = Object.keys(routeRegex.groups).filter(function (param) {
-              return !query[param];
-            });
+                if (false) {}
 
-            if (missingParams.length > 0) {
-              if (false) {}
+                resolvedAs = delBasePath(resolvedAs);
 
-              return reject(new Error("The provided `as` value (".concat(asPathname, ") is incompatible with the `href` value (").concat(route, "). ") + "Read more: https://err.sh/vercel/next.js/incompatible-href-as"));
+                if (!(0, _isDynamic.isDynamicRoute)(route)) {
+                  _context.next = 49;
+                  break;
+                }
+
+                parsedAs = (0, _parseRelativeUrl.parseRelativeUrl)(resolvedAs);
+                asPathname = parsedAs.pathname;
+                routeRegex = (0, _routeRegex.getRouteRegex)(route);
+                routeMatch = (0, _routeMatcher.getRouteMatcher)(routeRegex)(asPathname);
+                shouldInterpolate = route === asPathname;
+                interpolatedAs = shouldInterpolate ? interpolateAs(route, asPathname, query) : {};
+
+                if (!(!routeMatch || shouldInterpolate && !interpolatedAs.result)) {
+                  _context.next = 48;
+                  break;
+                }
+
+                missingParams = Object.keys(routeRegex.groups).filter(function (param) {
+                  return !query[param];
+                });
+
+                if (!(missingParams.length > 0)) {
+                  _context.next = 46;
+                  break;
+                }
+
+                if (false) {}
+
+                throw new Error((shouldInterpolate ? "The provided `href` (".concat(url, ") value is missing query values (").concat(missingParams.join(', '), ") to be interpolated properly. ") : "The provided `as` value (".concat(asPathname, ") is incompatible with the `href` value (").concat(route, "). ")) + "Read more: https://err.sh/vercel/next.js/".concat(shouldInterpolate ? 'href-interpolation-failed' : 'incompatible-href-as'));
+
+              case 46:
+                _context.next = 49;
+                break;
+
+              case 48:
+                if (shouldInterpolate) {
+                  as = (0, _utils.formatWithValidation)(Object.assign({}, parsedAs, {
+                    pathname: interpolatedAs.result,
+                    query: omitParmsFromQuery(query, interpolatedAs.params)
+                  }));
+                } else {
+                  // Merge params into `query`, overwriting any specified in search
+                  Object.assign(query, routeMatch);
+                }
+
+              case 49:
+                Router.events.emit('routeChangeStart', as);
+                _context.prev = 50;
+                _context.next = 53;
+                return this.getRouteInfo(route, pathname, query, as, shallow);
+
+              case 53:
+                routeInfo = _context.sent;
+                error = routeInfo.error, props = routeInfo.props, __N_SSG = routeInfo.__N_SSG, __N_SSP = routeInfo.__N_SSP; // handle redirect on client-transition
+
+                if (!((__N_SSG || __N_SSP) && props && props.pageProps && props.pageProps.__N_REDIRECT)) {
+                  _context.next = 64;
+                  break;
+                }
+
+                destination = props.pageProps.__N_REDIRECT; // check if destination is internal (resolves to a page) and attempt
+                // client-navigation if it is falling back to hard navigation if
+                // it's not
+
+                if (!destination.startsWith('/')) {
+                  _context.next = 62;
+                  break;
+                }
+
+                parsedHref = (0, _parseRelativeUrl.parseRelativeUrl)(destination);
+
+                this._resolveHref(parsedHref, pages);
+
+                if (!pages.includes(parsedHref.pathname)) {
+                  _context.next = 62;
+                  break;
+                }
+
+                return _context.abrupt("return", this.change('replaceState', destination, destination, options));
+
+              case 62:
+                window.location.href = destination;
+                return _context.abrupt("return", new Promise(function () {}));
+
+              case 64:
+                Router.events.emit('beforeHistoryChange', as);
+                this.changeState(method, url, as, options);
+
+                if (false) {}
+
+                _context.next = 69;
+                return this.set(route, pathname, query, cleanedAs, routeInfo)["catch"](function (e) {
+                  if (e.cancelled) error = error || e;else throw e;
+                });
+
+              case 69:
+                if (!error) {
+                  _context.next = 72;
+                  break;
+                }
+
+                Router.events.emit('routeChangeError', error, cleanedAs);
+                throw error;
+
+              case 72:
+                if (false) {}
+
+                Router.events.emit('routeChangeComplete', as);
+                return _context.abrupt("return", true);
+
+              case 77:
+                _context.prev = 77;
+                _context.t0 = _context["catch"](50);
+
+                if (!_context.t0.cancelled) {
+                  _context.next = 81;
+                  break;
+                }
+
+                return _context.abrupt("return", false);
+
+              case 81:
+                throw _context.t0;
+
+              case 82:
+              case "end":
+                return _context.stop();
             }
-          } else {
-            // Merge params into `query`, overwriting any specified in search
-            Object.assign(query, routeMatch);
           }
-        }
+        }, _callee, this, [[50, 77]]);
+      }));
 
-        Router.events.emit('routeChangeStart', as); // If shallow is true and the route exists in the router cache we reuse the previous result
+      function change(_x, _x2, _x3, _x4) {
+        return _change.apply(this, arguments);
+      }
 
-        _this2.getRouteInfo(route, pathname, query, as, shallow).then(function (routeInfo) {
-          var error = routeInfo.error;
-
-          if (error && error.cancelled) {
-            return resolve(false);
-          }
-
-          Router.events.emit('beforeHistoryChange', as);
-
-          _this2.changeState(method, url, as, options);
-
-          if (false) { var appComp; }
-
-          _this2.set(route, pathname, query, as, routeInfo).then(function () {
-            if (error) {
-              Router.events.emit('routeChangeError', error, as);
-              throw error;
-            }
-
-            Router.events.emit('routeChangeComplete', as);
-            return resolve(true);
-          });
-        }, reject);
-      });
-    }
+      return change;
+    }()
   }, {
     key: "changeState",
     value: function changeState(method, url, as) {
@@ -927,10 +1310,12 @@ var Router = /*#__PURE__*/function () {
       if (false) {}
 
       if (method !== 'pushState' || (0, _utils.getURL)() !== as) {
+        this._shallow = options.shallow;
         window.history[method]({
           url: url,
           as: as,
-          options: options
+          options: options,
+          __N: true
         }, // Most browsers currently ignores this parameter, although they may use it in the future.
         // Passing the empty string here should be safe against future changes to the method.
         // https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState
@@ -938,104 +1323,213 @@ var Router = /*#__PURE__*/function () {
       }
     }
   }, {
-    key: "getRouteInfo",
-    value: function getRouteInfo(route, pathname, query, as) {
-      var _this3 = this;
+    key: "handleRouteInfoError",
+    value: function () {
+      var _handleRouteInfoError = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee2(err, pathname, query, as, loadErrorFail) {
+        var _yield$this$fetchComp, Component, styleSheets, routeInfo;
 
-      var shallow = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
-      var cachedRouteInfo = this.components[route]; // If there is a shallow route transition possible
-      // If the route is already rendered on the screen.
+        return _regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!err.cancelled) {
+                  _context2.next = 2;
+                  break;
+                }
 
-      if (shallow && cachedRouteInfo && this.route === route) {
-        return Promise.resolve(cachedRouteInfo);
+                throw err;
+
+              case 2:
+                if (!(PAGE_LOAD_ERROR in err || loadErrorFail)) {
+                  _context2.next = 6;
+                  break;
+                }
+
+                Router.events.emit('routeChangeError', err, as); // If we can't load the page it could be one of following reasons
+                //  1. Page doesn't exists
+                //  2. Page does exist in a different zone
+                //  3. Internal error while loading the page
+                // So, doing a hard reload is the proper way to deal with this.
+
+                window.location.href = as; // Changing the URL doesn't block executing the current code path.
+                // So let's throw a cancellation error stop the routing logic.
+
+                throw buildCancellationError();
+
+              case 6:
+                _context2.prev = 6;
+                _context2.next = 9;
+                return this.fetchComponent('/_error');
+
+              case 9:
+                _yield$this$fetchComp = _context2.sent;
+                Component = _yield$this$fetchComp.page;
+                styleSheets = _yield$this$fetchComp.styleSheets;
+                routeInfo = {
+                  Component: Component,
+                  styleSheets: styleSheets,
+                  err: err,
+                  error: err
+                };
+                _context2.prev = 13;
+                _context2.next = 16;
+                return this.getInitialProps(Component, {
+                  err: err,
+                  pathname: pathname,
+                  query: query
+                });
+
+              case 16:
+                routeInfo.props = _context2.sent;
+                _context2.next = 23;
+                break;
+
+              case 19:
+                _context2.prev = 19;
+                _context2.t0 = _context2["catch"](13);
+                console.error('Error in error page `getInitialProps`: ', _context2.t0);
+                routeInfo.props = {};
+
+              case 23:
+                return _context2.abrupt("return", routeInfo);
+
+              case 26:
+                _context2.prev = 26;
+                _context2.t1 = _context2["catch"](6);
+                return _context2.abrupt("return", this.handleRouteInfoError(_context2.t1, pathname, query, as, true));
+
+              case 29:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[6, 26], [13, 19]]);
+      }));
+
+      function handleRouteInfoError(_x5, _x6, _x7, _x8, _x9) {
+        return _handleRouteInfoError.apply(this, arguments);
       }
 
-      var handleError = function handleError(err, loadErrorFail) {
-        return new Promise(function (resolve) {
-          if (err.code === 'PAGE_LOAD_ERROR' || loadErrorFail) {
-            // If we can't load the page it could be one of following reasons
-            //  1. Page doesn't exists
-            //  2. Page does exist in a different zone
-            //  3. Internal error while loading the page
-            // So, doing a hard reload is the proper way to deal with this.
-            window.location.href = as; // Changing the URL doesn't block executing the current code path.
-            // So, we need to mark it as a cancelled error and stop the routing logic.
+      return handleRouteInfoError;
+    }()
+  }, {
+    key: "getRouteInfo",
+    value: function () {
+      var _getRouteInfo = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee3(route, pathname, query, as) {
+        var _this3 = this;
 
-            err.cancelled = true; // @ts-ignore TODO: fix the control flow here
+        var shallow,
+            cachedRouteInfo,
+            routeInfo,
+            Component,
+            __N_SSG,
+            __N_SSP,
+            _require,
+            isValidElementType,
+            dataHref,
+            props,
+            _args3 = arguments;
 
-            return resolve({
-              error: err
-            });
-          }
+        return _regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                shallow = _args3.length > 4 && _args3[4] !== undefined ? _args3[4] : false;
+                _context3.prev = 1;
+                cachedRouteInfo = this.components[route];
 
-          if (err.cancelled) {
-            // @ts-ignore TODO: fix the control flow here
-            return resolve({
-              error: err
-            });
-          }
+                if (!(shallow && cachedRouteInfo && this.route === route)) {
+                  _context3.next = 5;
+                  break;
+                }
 
-          resolve(_this3.fetchComponent('/_error').then(function (res) {
-            var Component = res.page;
-            var routeInfo = {
-              Component: Component,
-              err: err
-            };
-            return new Promise(function (resolve) {
-              _this3.getInitialProps(Component, {
-                err: err,
-                pathname: pathname,
-                query: query
-              }).then(function (props) {
+                return _context3.abrupt("return", cachedRouteInfo);
+
+              case 5:
+                if (!cachedRouteInfo) {
+                  _context3.next = 9;
+                  break;
+                }
+
+                _context3.t0 = cachedRouteInfo;
+                _context3.next = 12;
+                break;
+
+              case 9:
+                _context3.next = 11;
+                return this.fetchComponent(route).then(function (res) {
+                  return {
+                    Component: res.page,
+                    styleSheets: res.styleSheets,
+                    __N_SSG: res.mod.__N_SSG,
+                    __N_SSP: res.mod.__N_SSP
+                  };
+                });
+
+              case 11:
+                _context3.t0 = _context3.sent;
+
+              case 12:
+                routeInfo = _context3.t0;
+                Component = routeInfo.Component, __N_SSG = routeInfo.__N_SSG, __N_SSP = routeInfo.__N_SSP;
+
+                if (true) {
+                  _context3.next = 18;
+                  break;
+                }
+
+                _require = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module 'react-is'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())), isValidElementType = _require.isValidElementType;
+
+                if (isValidElementType(Component)) {
+                  _context3.next = 18;
+                  break;
+                }
+
+                throw new Error("The default export is not a React Component in page: \"".concat(pathname, "\""));
+
+              case 18:
+                if (__N_SSG || __N_SSP) {
+                  dataHref = this.pageLoader.getDataHref((0, _utils.formatWithValidation)({
+                    pathname: pathname,
+                    query: query
+                  }), delBasePath(as), __N_SSG);
+                }
+
+                _context3.next = 21;
+                return this._getData(function () {
+                  return __N_SSG ? _this3._getStaticData(dataHref) : __N_SSP ? _this3._getServerData(dataHref) : _this3.getInitialProps(Component, // we provide AppTree later so this needs to be `any`
+                  {
+                    pathname: pathname,
+                    query: query,
+                    asPath: as
+                  });
+                });
+
+              case 21:
+                props = _context3.sent;
                 routeInfo.props = props;
-                routeInfo.error = err;
-                resolve(routeInfo);
-              }, function (gipErr) {
-                console.error('Error in error page `getInitialProps`: ', gipErr);
-                routeInfo.error = err;
-                routeInfo.props = {};
-                resolve(routeInfo);
-              });
-            });
-          })["catch"](function (err) {
-            return handleError(err, true);
-          }));
-        });
-      };
+                this.components[route] = routeInfo;
+                return _context3.abrupt("return", routeInfo);
 
-      return new Promise(function (resolve, reject) {
-        if (cachedRouteInfo) {
-          return resolve(cachedRouteInfo);
-        }
+              case 27:
+                _context3.prev = 27;
+                _context3.t1 = _context3["catch"](1);
+                return _context3.abrupt("return", this.handleRouteInfoError(_context3.t1, pathname, query, as));
 
-        _this3.fetchComponent(route).then(function (res) {
-          return resolve({
-            Component: res.page,
-            __N_SSG: res.mod.__N_SSG,
-            __N_SSP: res.mod.__N_SSP
-          });
-        }, reject);
-      }).then(function (routeInfo) {
-        var Component = routeInfo.Component,
-            __N_SSG = routeInfo.__N_SSG,
-            __N_SSP = routeInfo.__N_SSP;
+              case 30:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[1, 27]]);
+      }));
 
-        if (false) { var _require, isValidElementType; }
+      function getRouteInfo(_x10, _x11, _x12, _x13) {
+        return _getRouteInfo.apply(this, arguments);
+      }
 
-        return _this3._getData(function () {
-          return __N_SSG ? _this3._getStaticData(as) : __N_SSP ? _this3._getServerData(as) : _this3.getInitialProps(Component, // we provide AppTree later so this needs to be `any`
-          {
-            pathname: pathname,
-            query: query,
-            asPath: as
-          });
-        }).then(function (props) {
-          routeInfo.props = props;
-          _this3.components[route] = routeInfo;
-          return routeInfo;
-        });
-      })["catch"](handleError);
-    }
+      return getRouteInfo;
+    }()
   }, {
     key: "set",
     value: function set(route, pathname, query, as, data) {
@@ -1121,6 +1615,30 @@ var Router = /*#__PURE__*/function () {
     value: function urlIsNew(asPath) {
       return this.asPath !== asPath;
     }
+  }, {
+    key: "_resolveHref",
+    value: function _resolveHref(parsedHref, pages) {
+      var applyBasePath = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      var pathname = parsedHref.pathname;
+      var cleanPathname = (0, _normalizeTrailingSlash.removePathTrailingSlash)((0, _denormalizePagePath.denormalizePagePath)(applyBasePath ? delBasePath(pathname) : pathname));
+
+      if (cleanPathname === '/404' || cleanPathname === '/_error') {
+        return parsedHref;
+      } // handle resolving href for dynamic routes
+
+
+      if (!pages.includes(cleanPathname)) {
+        // eslint-disable-next-line array-callback-return
+        pages.some(function (page) {
+          if ((0, _isDynamic.isDynamicRoute)(page) && (0, _routeRegex.getRouteRegex)(page).re.test(cleanPathname)) {
+            parsedHref.pathname = applyBasePath ? addBasePath(page) : page;
+            return true;
+          }
+        });
+      }
+
+      return parsedHref;
+    }
     /**
     * Prefetch page code, you may wait for the data during page rendering.
     * This feature only works in production!
@@ -1130,39 +1648,72 @@ var Router = /*#__PURE__*/function () {
 
   }, {
     key: "prefetch",
-    value: function prefetch(url) {
-      var _this4 = this;
+    value: function () {
+      var _prefetch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee4(url) {
+        var asPath,
+            options,
+            parsed,
+            _parsed2,
+            pathname,
+            pages,
+            route,
+            _args4 = arguments;
 
-      var asPath = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : url;
-      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      return new Promise(function (resolve, reject) {
-        var _ref5 = (0, _url2.parse)(url),
-            pathname = _ref5.pathname,
-            protocol = _ref5.protocol;
+        return _regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                asPath = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : url;
+                options = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : {};
+                parsed = (0, _parseRelativeUrl.parseRelativeUrl)(url);
+                _parsed2 = parsed, pathname = _parsed2.pathname;
+                _context4.next = 6;
+                return this.pageLoader.getPageList();
 
-        if (!pathname || protocol) {
-          if (false) {}
+              case 6:
+                pages = _context4.sent;
+                parsed = this._resolveHref(parsed, pages);
 
-          return;
-        } // Prefetch is not supported in development mode because it would trigger on-demand-entries
+                if (parsed.pathname !== pathname) {
+                  pathname = parsed.pathname;
+                  url = (0, _utils.formatWithValidation)(parsed);
+                } // Prefetch is not supported in development mode because it would trigger on-demand-entries
 
 
-        if (false) {}
+                if (true) {
+                  _context4.next = 11;
+                  break;
+                }
 
-        var route = delBasePath(toRoute(pathname));
-        Promise.all([_this4.pageLoader.prefetchData(url, delBasePath(asPath)), _this4.pageLoader[options.priority ? 'loadPage' : 'prefetch'](route)]).then(function () {
-          return resolve();
-        }, reject);
-      });
-    }
+                return _context4.abrupt("return");
+
+              case 11:
+                route = (0, _normalizeTrailingSlash.removePathTrailingSlash)(pathname);
+                _context4.next = 14;
+                return Promise.all([this.pageLoader.prefetchData(url, asPath), this.pageLoader[options.priority ? 'loadPage' : 'prefetch'](route)]);
+
+              case 14:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function prefetch(_x14) {
+        return _prefetch.apply(this, arguments);
+      }
+
+      return prefetch;
+    }()
   }, {
     key: "fetchComponent",
     value: function () {
-      var _fetchComponent = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(route) {
+      var _fetchComponent = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee5(route) {
         var cancelled, cancel, componentResult, error;
-        return _regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
                 cancelled = false;
 
@@ -1170,15 +1721,14 @@ var Router = /*#__PURE__*/function () {
                   cancelled = true;
                 };
 
-                route = delBasePath(route);
-                _context.next = 5;
+                _context5.next = 4;
                 return this.pageLoader.loadPage(route);
 
-              case 5:
-                componentResult = _context.sent;
+              case 4:
+                componentResult = _context5.sent;
 
                 if (!cancelled) {
-                  _context.next = 10;
+                  _context5.next = 9;
                   break;
                 }
 
@@ -1186,22 +1736,22 @@ var Router = /*#__PURE__*/function () {
                 error.cancelled = true;
                 throw error;
 
-              case 10:
+              case 9:
                 if (cancel === this.clc) {
                   this.clc = null;
                 }
 
-                return _context.abrupt("return", componentResult);
+                return _context5.abrupt("return", componentResult);
 
-              case 12:
+              case 11:
               case "end":
-                return _context.stop();
+                return _context5.stop();
             }
           }
-        }, _callee, this);
+        }, _callee5, this);
       }));
 
-      function fetchComponent(_x) {
+      function fetchComponent(_x15) {
         return _fetchComponent.apply(this, arguments);
       }
 
@@ -1210,7 +1760,7 @@ var Router = /*#__PURE__*/function () {
   }, {
     key: "_getData",
     value: function _getData(fn) {
-      var _this5 = this;
+      var _this4 = this;
 
       var cancelled = false;
 
@@ -1220,8 +1770,8 @@ var Router = /*#__PURE__*/function () {
 
       this.clc = cancel;
       return fn().then(function (data) {
-        if (cancel === _this5.clc) {
-          _this5.clc = null;
+        if (cancel === _this4.clc) {
+          _this4.clc = null;
         }
 
         if (cancelled) {
@@ -1232,6 +1782,28 @@ var Router = /*#__PURE__*/function () {
 
         return data;
       });
+    }
+  }, {
+    key: "_getStaticData",
+    value: function _getStaticData(dataHref) {
+      var _this5 = this;
+
+      var _URL = new URL(dataHref, window.location.href),
+          cacheKey = _URL.href;
+
+      if ( true && this.sdc[cacheKey]) {
+        return Promise.resolve(this.sdc[cacheKey]);
+      }
+
+      return fetchNextData(dataHref, this.isSsr).then(function (data) {
+        _this5.sdc[cacheKey] = data;
+        return data;
+      });
+    }
+  }, {
+    key: "_getServerData",
+    value: function _getServerData(dataHref) {
+      return fetchNextData(dataHref, this.isSsr);
     }
   }, {
     key: "getInitialProps",
@@ -1252,9 +1824,7 @@ var Router = /*#__PURE__*/function () {
     key: "abortComponentLoad",
     value: function abortComponentLoad(as) {
       if (this.clc) {
-        var e = new Error('Route Cancelled');
-        e.cancelled = true;
-        Router.events.emit('routeChangeError', e, as);
+        Router.events.emit('routeChangeError', buildCancellationError(), as);
         this.clc();
         this.clc = null;
       }
@@ -1264,13 +1834,6 @@ var Router = /*#__PURE__*/function () {
     value: function notify(data) {
       return this.sub(data, this.components['/_app'].Component);
     }
-  }], [{
-    key: "_rewriteUrlForNextExport",
-    value: function _rewriteUrlForNextExport(url) {
-      if (false) { var rewriteUrlForNextExport; } else {
-        return url;
-      }
-    }
   }]);
 
   return Router;
@@ -1278,6 +1841,23 @@ var Router = /*#__PURE__*/function () {
 
 exports["default"] = Router;
 Router.events = (0, _mitt["default"])();
+
+/***/ }),
+
+/***/ "fcRV":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports["default"] = escapePathDelimiters; // escape delimiters used by path-to-regexp
+
+function escapePathDelimiters(segment) {
+  return segment.replace(/[/#?]/g, function (_char) {
+    return encodeURIComponent(_char);
+  });
+}
 
 /***/ }),
 
@@ -1301,7 +1881,7 @@ exports.loadGetInitialProps = loadGetInitialProps;
 exports.formatWithValidation = formatWithValidation;
 exports.ST = exports.SP = exports.urlObjectKeys = void 0;
 
-var _url = __webpack_require__("QmWs");
+var _formatUrl = __webpack_require__("6D7l");
 /**
 * Utils
 */
@@ -1359,7 +1939,7 @@ function _loadGetInitialProps() {
               break;
             }
 
-            if (!((_App$prototype = App.prototype) === null || _App$prototype === void 0 ? void 0 : _App$prototype.getInitialProps)) {
+            if (!((_App$prototype = App.prototype) == null ? void 0 : _App$prototype.getInitialProps)) {
               _context.next = 4;
               break;
             }
@@ -1434,10 +2014,10 @@ function _loadGetInitialProps() {
 var urlObjectKeys = ['auth', 'hash', 'host', 'hostname', 'href', 'path', 'pathname', 'port', 'protocol', 'query', 'search', 'slashes'];
 exports.urlObjectKeys = urlObjectKeys;
 
-function formatWithValidation(url, options) {
+function formatWithValidation(url) {
   if (false) {}
 
-  return (0, _url.format)(url, options);
+  return (0, _formatUrl.formatUrl)(url);
 }
 
 var SP = typeof performance !== 'undefined';
@@ -1493,95 +2073,51 @@ function getRouteMatcher(routeRegex) {
 
 /***/ }),
 
-/***/ "kd2E":
+/***/ "hS4m":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+exports.__esModule = true;
+exports.parseRelativeUrl = parseRelativeUrl;
 
-// If obj.hasOwnProperty has been overridden, then calling
-// obj.hasOwnProperty(prop) will break.
-// See: https://github.com/joyent/node/issues/1707
-function hasOwnProperty(obj, prop) {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
+var _utils = __webpack_require__("g/15");
+
+var _querystring = __webpack_require__("3WeD");
+
+var DUMMY_BASE = new URL(false ? undefined : (0, _utils.getLocationOrigin)());
+/**
+* Parses path-relative urls (e.g. `/hello/world?foo=bar`). If url isn't path-relative
+* (e.g. `./hello`) then at least base must be.
+* Absolute urls are rejected with one exception, in the browser, absolute urls that are on
+* the current origin will be parsed as relative
+*/
+
+function parseRelativeUrl(url, base) {
+  var resolvedBase = base ? new URL(base, DUMMY_BASE) : DUMMY_BASE;
+
+  var _URL = new URL(url, resolvedBase),
+      pathname = _URL.pathname,
+      searchParams = _URL.searchParams,
+      search = _URL.search,
+      hash = _URL.hash,
+      href = _URL.href,
+      origin = _URL.origin,
+      protocol = _URL.protocol;
+
+  if (origin !== DUMMY_BASE.origin || protocol !== 'http:' && protocol !== 'https:') {
+    throw new Error('invariant: invalid relative URL');
+  }
+
+  return {
+    pathname: pathname,
+    query: (0, _querystring.searchParamsToUrlQuery)(searchParams),
+    search: search,
+    hash: hash,
+    href: href.slice(DUMMY_BASE.origin.length)
+  };
 }
-
-module.exports = function(qs, sep, eq, options) {
-  sep = sep || '&';
-  eq = eq || '=';
-  var obj = {};
-
-  if (typeof qs !== 'string' || qs.length === 0) {
-    return obj;
-  }
-
-  var regexp = /\+/g;
-  qs = qs.split(sep);
-
-  var maxKeys = 1000;
-  if (options && typeof options.maxKeys === 'number') {
-    maxKeys = options.maxKeys;
-  }
-
-  var len = qs.length;
-  // maxKeys <= 0 means that we should not limit keys count
-  if (maxKeys > 0 && len > maxKeys) {
-    len = maxKeys;
-  }
-
-  for (var i = 0; i < len; ++i) {
-    var x = qs[i].replace(regexp, '%20'),
-        idx = x.indexOf(eq),
-        kstr, vstr, k, v;
-
-    if (idx >= 0) {
-      kstr = x.substr(0, idx);
-      vstr = x.substr(idx + 1);
-    } else {
-      kstr = x;
-      vstr = '';
-    }
-
-    k = decodeURIComponent(kstr);
-    v = decodeURIComponent(vstr);
-
-    if (!hasOwnProperty(obj, k)) {
-      obj[k] = v;
-    } else if (isArray(obj[k])) {
-      obj[k].push(v);
-    } else {
-      obj[k] = [obj[k], v];
-    }
-  }
-
-  return obj;
-};
-
-var isArray = Array.isArray || function (xs) {
-  return Object.prototype.toString.call(xs) === '[object Array]';
-};
-
 
 /***/ }),
 
@@ -2458,9 +2994,7 @@ routerEvents.forEach(function (event) {
         try {
           _singletonRouter[eventField].apply(_singletonRouter, arguments);
         } catch (err) {
-          // tslint:disable-next-line:no-console
-          console.error("Error when running the Router event: ".concat(eventField)); // tslint:disable-next-line:no-console
-
+          console.error("Error when running the Router event: ".concat(eventField));
           console.error("".concat(err.message, "\n").concat(err.stack));
         }
       }
@@ -2570,23 +3104,11 @@ function _interopRequireDefault(obj) {
   };
 }
 
-var RouterContext = _react["default"].createContext(null);
+var RouterContext = /*#__PURE__*/_react["default"].createContext(null);
 
 exports.RouterContext = RouterContext;
 
 if (false) {}
-
-/***/ }),
-
-/***/ "s4NR":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.decode = exports.parse = __webpack_require__("kd2E");
-exports.encode = exports.stringify = __webpack_require__("4JlD");
-
 
 /***/ }),
 
@@ -2626,6 +3148,15 @@ function _arrayWithHoles(arr) {
 }
 
 module.exports = _arrayWithHoles;
+
+/***/ }),
+
+/***/ "wkBG":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+exports.__esModule=true;exports.normalizePathSep=normalizePathSep;exports.denormalizePagePath=denormalizePagePath;function normalizePathSep(path){return path.replace(/\\/g,'/');}function denormalizePagePath(page){page=normalizePathSep(page);if(page.startsWith('/index/')){page=page.slice(6);}else if(page==='/index'){page='/';}return page;}
+//# sourceMappingURL=denormalize-page-path.js.map
 
 /***/ }),
 

@@ -1,4 +1,5 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[6],{
+_N_E =
+(window["webpackJsonp_N_E"] = window["webpackJsonp_N_E"] || []).push([[6],{
 
 /***/ "/0+H":
 /***/ (function(module, exports, __webpack_require__) {
@@ -39,75 +40,145 @@ function useAmp() {
 
 /***/ }),
 
-/***/ "/EDR":
+/***/ "/a9y":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _classCallCheck = __webpack_require__("lwsE");
+
+var _createClass = __webpack_require__("W8MJ");
+
+var _inherits = __webpack_require__("7W2i");
+
+var _possibleConstructorReturn = __webpack_require__("a1gu");
+
+var _getPrototypeOf = __webpack_require__("Nsbk");
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+var _interopRequireDefault = __webpack_require__("TqRt");
+
+exports.__esModule = true;
+exports["default"] = void 0;
+
+var _react = _interopRequireDefault(__webpack_require__("q1tI"));
+
+var _head = _interopRequireDefault(__webpack_require__("8Kt/"));
+
+var statusCodes = {
+  400: 'Bad Request',
+  404: 'This page could not be found',
+  405: 'Method Not Allowed',
+  500: 'Internal Server Error'
+};
+
+function _getInitialProps(_ref) {
+  var res = _ref.res,
+      err = _ref.err;
+  var statusCode = res && res.statusCode ? res.statusCode : err ? err.statusCode : 404;
+  return {
+    statusCode: statusCode
+  };
+}
+/**
+* `Error` component used for handling errors.
+*/
+
+
+var Error = /*#__PURE__*/function (_react$default$Compon) {
+  _inherits(Error, _react$default$Compon);
+
+  var _super = _createSuper(Error);
+
+  function Error() {
+    _classCallCheck(this, Error);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(Error, [{
+    key: "render",
+    value: function render() {
+      var statusCode = this.props.statusCode;
+      var title = this.props.title || statusCodes[statusCode] || 'An unexpected error has occurred';
+      return /*#__PURE__*/_react["default"].createElement("div", {
+        style: styles.error
+      }, /*#__PURE__*/_react["default"].createElement(_head["default"], null, /*#__PURE__*/_react["default"].createElement("title", null, statusCode, ": ", title)), /*#__PURE__*/_react["default"].createElement("div", null, /*#__PURE__*/_react["default"].createElement("style", {
+        dangerouslySetInnerHTML: {
+          __html: 'body { margin: 0 }'
+        }
+      }), statusCode ? /*#__PURE__*/_react["default"].createElement("h1", {
+        style: styles.h1
+      }, statusCode) : null, /*#__PURE__*/_react["default"].createElement("div", {
+        style: styles.desc
+      }, /*#__PURE__*/_react["default"].createElement("h2", {
+        style: styles.h2
+      }, title, "."))));
+    }
+  }]);
+
+  return Error;
+}(_react["default"].Component);
+
+exports["default"] = Error;
+Error.displayName = 'ErrorPage';
+Error.getInitialProps = _getInitialProps;
+Error.origGetInitialProps = _getInitialProps;
+var styles = {
+  error: {
+    color: '#000',
+    background: '#fff',
+    fontFamily: '-apple-system, BlinkMacSystemFont, Roboto, "Segoe UI", "Fira Sans", Avenir, "Helvetica Neue", "Lucida Grande", sans-serif',
+    height: '100vh',
+    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  desc: {
+    display: 'inline-block',
+    textAlign: 'left',
+    lineHeight: '49px',
+    height: '49px',
+    verticalAlign: 'middle'
+  },
+  h1: {
+    display: 'inline-block',
+    borderRight: '1px solid rgba(0, 0, 0,.3)',
+    margin: 0,
+    marginRight: '20px',
+    padding: '10px 23px 10px 0',
+    fontSize: '24px',
+    fontWeight: 500,
+    verticalAlign: 'top'
+  },
+  h2: {
+    fontSize: '14px',
+    fontWeight: 'normal',
+    lineHeight: 'inherit',
+    margin: 0,
+    padding: 0
+  }
+};
+
+/***/ }),
+
+/***/ "04ac":
 /***/ (function(module, exports, __webpack_require__) {
 
 
     (window.__NEXT_P = window.__NEXT_P || []).push([
-      "/",
+      "/_error",
       function () {
-        return __webpack_require__("23aj");
+        return __webpack_require__("/a9y");
       }
     ]);
   
-
-/***/ }),
-
-/***/ "23aj":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "default", function() { return /* binding */ Home; });
-
-// EXTERNAL MODULE: ./node_modules/react/index.js
-var react = __webpack_require__("q1tI");
-var react_default = /*#__PURE__*/__webpack_require__.n(react);
-
-// EXTERNAL MODULE: ./components/index.module.scss
-var index_module = __webpack_require__("cVGP");
-var index_module_default = /*#__PURE__*/__webpack_require__.n(index_module);
-
-// EXTERNAL MODULE: ./node_modules/next/dist/next-server/lib/head.js
-var head = __webpack_require__("8Kt/");
-var head_default = /*#__PURE__*/__webpack_require__.n(head);
-
-// CONCATENATED MODULE: ./components/Index.tsx
-
-var __jsx = react_default.a.createElement;
-
-
-function Index(links) {
-  return __jsx("div", {
-    className: index_module_default.a.container
-  }, __jsx(head_default.a, null, __jsx("title", null, "watta.org"), __jsx("link", {
-    rel: "icon",
-    href: "/favicon.ico"
-  }), __jsx("meta", {
-    name: "description",
-    content: "my playground"
-  })), __jsx("main", {
-    className: index_module_default.a.mainColumn
-  }, __jsx("h1", {
-    className: index_module_default.a.title
-  }, "watta.org"), __jsx("div", null, __jsx("ul", null, links.map(function (link, index) {
-    return __jsx("li", {
-      key: index
-    }, __jsx("a", {
-      href: link,
-      className: index_module_default.a.listAnchor
-    }, link));
-  })))));
-}
-// CONCATENATED MODULE: ./pages/index.tsx
-
-var pages_links = ['https://blog.kga.gg/', 'https://twitter.com/kga', 'https://github.com/kga', 'https://www.mixcloud.com/kgaaa/'];
-function Home() {
-  return Index(pages_links);
-}
 
 /***/ }),
 
@@ -141,11 +212,17 @@ module.exports = _inherits;
 "use strict";
 
 
+var _defineProperty = __webpack_require__("lSNA");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 exports.__esModule = true;
 exports.defaultHead = defaultHead;
 exports["default"] = void 0;
 
-var _react = _interopRequireDefault(__webpack_require__("q1tI"));
+var _react = _interopRequireWildcard(__webpack_require__("q1tI"));
 
 var _sideEffect = _interopRequireDefault(__webpack_require__("Xuae"));
 
@@ -159,6 +236,58 @@ function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     "default": obj
   };
+}
+
+function _getRequireWildcardCache() {
+  if (typeof WeakMap !== "function") return null;
+  var cache = new WeakMap();
+
+  _getRequireWildcardCache = function _getRequireWildcardCache() {
+    return cache;
+  };
+
+  return cache;
+}
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  }
+
+  if (obj === null || typeof obj !== "object" && typeof obj !== "function") {
+    return {
+      "default": obj
+    };
+  }
+
+  var cache = _getRequireWildcardCache();
+
+  if (cache && cache.has(obj)) {
+    return cache.get(obj);
+  }
+
+  var newObj = {};
+  var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor;
+
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null;
+
+      if (desc && (desc.get || desc.set)) {
+        Object.defineProperty(newObj, key, desc);
+      } else {
+        newObj[key] = obj[key];
+      }
+    }
+  }
+
+  newObj["default"] = obj;
+
+  if (cache) {
+    cache.set(obj, newObj);
+  }
+
+  return newObj;
 }
 
 function defaultHead() {
@@ -210,13 +339,13 @@ function unique() {
   var metaTypes = new Set();
   var metaCategories = {};
   return function (h) {
-    var unique = true;
+    var isUnique = true;
 
     if (h.key && typeof h.key !== 'number' && h.key.indexOf('$') > 0) {
       var key = h.key.slice(h.key.indexOf('$') + 1);
 
       if (keys.has(key)) {
-        unique = false;
+        isUnique = false;
       } else {
         keys.add(key);
       }
@@ -227,7 +356,7 @@ function unique() {
       case 'title':
       case 'base':
         if (tags.has(h.type)) {
-          unique = false;
+          isUnique = false;
         } else {
           tags.add(h.type);
         }
@@ -241,7 +370,7 @@ function unique() {
 
           if (metatype === 'charSet') {
             if (metaTypes.has(metatype)) {
-              unique = false;
+              isUnique = false;
             } else {
               metaTypes.add(metatype);
             }
@@ -250,7 +379,7 @@ function unique() {
             var categories = metaCategories[metatype] || new Set();
 
             if (categories.has(category)) {
-              unique = false;
+              isUnique = false;
             } else {
               categories.add(category);
               metaCategories[metatype] = categories;
@@ -261,7 +390,7 @@ function unique() {
         break;
     }
 
-    return unique;
+    return isUnique;
   };
 }
 /**
@@ -277,32 +406,34 @@ function reduceComponents(headElements, props) {
     return list.concat(headElementChildren);
   }, []).reduce(onlyReactElement, []).reverse().concat(defaultHead(props.inAmpMode)).filter(unique()).reverse().map(function (c, i) {
     var key = c.key || i;
-    return _react["default"].cloneElement(c, {
+
+    if (false) { var newProps; }
+
+    return /*#__PURE__*/_react["default"].cloneElement(c, {
       key: key
     });
   });
 }
-
-var Effect = (0, _sideEffect["default"])();
 /**
 * This component injects elements to `<head>` of your page.
 * To avoid duplicated `tags` in `<head>` you can use the `key` property, which will make sure every tag is only rendered once.
 */
 
+
 function Head(_ref) {
   var children = _ref.children;
-  return /*#__PURE__*/_react["default"].createElement(_ampContext.AmpStateContext.Consumer, null, function (ampState) {
-    return /*#__PURE__*/_react["default"].createElement(_headManagerContext.HeadManagerContext.Consumer, null, function (updateHead) {
-      return /*#__PURE__*/_react["default"].createElement(Effect, {
-        reduceComponentsToState: reduceComponents,
-        handleStateChange: updateHead,
-        inAmpMode: (0, _amp.isInAmpMode)(ampState)
-      }, children);
-    });
-  });
-}
+  var ampState = (0, _react.useContext)(_ampContext.AmpStateContext);
+  var headManager = (0, _react.useContext)(_headManagerContext.HeadManagerContext);
+  return /*#__PURE__*/_react["default"].createElement(_sideEffect["default"], {
+    reduceComponentsToState: reduceComponents,
+    headManager: headManager,
+    inAmpMode: (0, _amp.isInAmpMode)(ampState)
+  }, children);
+} // TODO: Remove in the next major release
 
-Head.rewind = Effect.rewind;
+
+Head.rewind = function () {};
+
 var _default = Head;
 exports["default"] = _default;
 
@@ -347,7 +478,7 @@ function _interopRequireDefault(obj) {
   };
 }
 
-var HeadManagerContext = _react["default"].createContext(null);
+var HeadManagerContext = /*#__PURE__*/_react["default"].createContext({});
 
 exports.HeadManagerContext = HeadManagerContext;
 
@@ -441,6 +572,19 @@ module.exports = _setPrototypeOf;
 
 /***/ }),
 
+/***/ "TqRt":
+/***/ (function(module, exports) {
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : {
+    "default": obj
+  };
+}
+
+module.exports = _interopRequireDefault;
+
+/***/ }),
+
 /***/ "W8MJ":
 /***/ (function(module, exports) {
 
@@ -487,19 +631,19 @@ module.exports = _arrayLikeToArray;
 "use strict";
 
 
+var _toConsumableArray = __webpack_require__("RIqP");
+
 var _classCallCheck = __webpack_require__("lwsE");
 
-var _assertThisInitialized = __webpack_require__("PJYZ");
-
 var _createClass = __webpack_require__("W8MJ");
+
+var _assertThisInitialized = __webpack_require__("PJYZ");
 
 var _inherits = __webpack_require__("7W2i");
 
 var _possibleConstructorReturn = __webpack_require__("a1gu");
 
 var _getPrototypeOf = __webpack_require__("Nsbk");
-
-var _toConsumableArray = __webpack_require__("RIqP");
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
@@ -512,76 +656,68 @@ var _react = __webpack_require__("q1tI");
 
 var isServer = false;
 
-var _default = function _default() {
-  var mountedInstances = new Set();
-  var state;
+var _default = /*#__PURE__*/function (_react$Component) {
+  _inherits(_default, _react$Component);
 
-  function emitChange(component) {
-    state = component.props.reduceComponentsToState(_toConsumableArray(mountedInstances), component.props);
+  var _super = _createSuper(_default);
 
-    if (component.props.handleStateChange) {
-      component.props.handleStateChange(state);
+  function _default(props) {
+    var _this;
+
+    _classCallCheck(this, _default);
+
+    _this = _super.call(this, props);
+    _this._hasHeadManager = void 0;
+
+    _this.emitChange = function () {
+      if (_this._hasHeadManager) {
+        _this.props.headManager.updateHead(_this.props.reduceComponentsToState(_toConsumableArray(_this.props.headManager.mountedInstances), _this.props));
+      }
+    };
+
+    _this._hasHeadManager = _this.props.headManager && _this.props.headManager.mountedInstances;
+
+    if (isServer && _this._hasHeadManager) {
+      _this.props.headManager.mountedInstances.add(_assertThisInitialized(_this));
+
+      _this.emitChange();
     }
+
+    return _this;
   }
 
-  return /*#__PURE__*/function (_react$Component) {
-    _inherits(_class, _react$Component);
-
-    var _super = _createSuper(_class);
-
-    _createClass(_class, null, [{
-      key: "rewind",
-      // Used when server rendering
-      value: function rewind() {
-        var recordedState = state;
-        state = undefined;
-        mountedInstances.clear();
-        return recordedState;
-      }
-    }]);
-
-    function _class(props) {
-      var _this;
-
-      _classCallCheck(this, _class);
-
-      _this = _super.call(this, props);
-
-      if (isServer) {
-        mountedInstances.add(_assertThisInitialized(_this));
-        emitChange(_assertThisInitialized(_this));
+  _createClass(_default, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      if (this._hasHeadManager) {
+        this.props.headManager.mountedInstances.add(this);
       }
 
-      return _this;
+      this.emitChange();
     }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      this.emitChange();
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      if (this._hasHeadManager) {
+        this.props.headManager.mountedInstances["delete"](this);
+      }
 
-    _createClass(_class, [{
-      key: "componentDidMount",
-      value: function componentDidMount() {
-        mountedInstances.add(this);
-        emitChange(this);
-      }
-    }, {
-      key: "componentDidUpdate",
-      value: function componentDidUpdate() {
-        emitChange(this);
-      }
-    }, {
-      key: "componentWillUnmount",
-      value: function componentWillUnmount() {
-        mountedInstances["delete"](this);
-        emitChange(this);
-      }
-    }, {
-      key: "render",
-      value: function render() {
-        return null;
-      }
-    }]);
+      this.emitChange();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return null;
+    }
+  }]);
 
-    return _class;
-  }(_react.Component);
-};
+  return _default;
+}(_react.Component);
 
 exports["default"] = _default;
 
@@ -647,6 +783,28 @@ module.exports = _typeof;
 
 /***/ }),
 
+/***/ "lSNA":
+/***/ (function(module, exports) {
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+module.exports = _defineProperty;
+
+/***/ }),
+
 /***/ "lwAK":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -664,7 +822,7 @@ function _interopRequireDefault(obj) {
   };
 }
 
-var AmpStateContext = _react["default"].createContext({});
+var AmpStateContext = /*#__PURE__*/_react["default"].createContext({});
 
 exports.AmpStateContext = AmpStateContext;
 
@@ -685,4 +843,4 @@ module.exports = _classCallCheck;
 
 /***/ })
 
-},[["/EDR",0,1,3]]]);
+},[["04ac",0,1]]]);
