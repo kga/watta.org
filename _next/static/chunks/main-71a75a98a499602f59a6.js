@@ -264,7 +264,7 @@ var _router2 = __webpack_require__("nOHt");
 
 var data = JSON.parse(document.getElementById('__NEXT_DATA__').textContent);
 window.__NEXT_DATA__ = data;
-var version = "9.5.4";
+var version = "9.5.5";
 exports.version = version;
 var hydrateProps = data.props,
     hydrateErr = data.err,
@@ -275,7 +275,10 @@ var hydrateProps = data.props,
     runtimeConfig = data.runtimeConfig,
     dynamicIds = data.dynamicIds,
     isFallback = data.isFallback,
-    initialHeadData = data.head;
+    initialHeadData = data.head,
+    locales = data.locales,
+    defaultLocale = data.defaultLocale;
+var locale = data.locale;
 var prefix = assetPrefix || ''; // With dynamic assetPrefix it's no longer possible to set assetPrefix at the build time
 // So, this is how we do it in the client side at runtime
 
@@ -291,6 +294,10 @@ var asPath = (0, _utils.getURL)(); // make sure not to attempt stripping basePat
 if ((0, _router.hasBasePath)(asPath)) {
   asPath = (0, _router.delBasePath)(asPath);
 }
+
+asPath = (0, _router.delLocale)(asPath, locale);
+
+if (false) { var localePathResult, _require, normalizeLocalePath; }
 
 var pageLoader = new _pageLoader["default"](buildId, prefix, page);
 
@@ -392,7 +399,7 @@ var Container = /*#__PURE__*/function (_react$default$Compon) {
     value: function render() {
       if (true) {
         return this.props.children;
-      } else { var _require, ReactDevOverlay; }
+      } else { var _require2, ReactDevOverlay; }
     }
   }]);
 
@@ -410,9 +417,9 @@ var _default = /*#__PURE__*/function () {
         mod,
         initialErr,
         _yield$pageLoader$loa2,
-        _require2,
-        isValidElementType,
         _require3,
+        isValidElementType,
+        _require4,
         getNodeError,
         renderCtx,
         _args = arguments;
@@ -478,7 +485,7 @@ var _default = /*#__PURE__*/function () {
               break;
             }
 
-            _require2 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module 'react-is'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())), isValidElementType = _require2.isValidElementType;
+            _require3 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module 'react-is'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())), isValidElementType = _require3.isValidElementType;
 
             if (isValidElementType(CachedComponent)) {
               _context.next = 21;
@@ -530,7 +537,10 @@ var _default = /*#__PURE__*/function () {
                   props: props,
                   err: err
                 });
-              }
+              },
+              locale: locale,
+              locales: locales,
+              defaultLocale: defaultLocale
             }); // call init-client middleware
 
             if (false) {}
@@ -1265,7 +1275,7 @@ var PageLoader = /*#__PURE__*/function () {
 
   }, {
     key: "getDataHref",
-    value: function getDataHref(href, asPath, ssg) {
+    value: function getDataHref(href, asPath, ssg, locale, defaultLocale) {
       var _this2 = this;
 
       var _ref = (0, _parseRelativeUrl.parseRelativeUrl)(href),
@@ -1279,7 +1289,7 @@ var PageLoader = /*#__PURE__*/function () {
       var route = normalizeRoute(hrefPathname);
 
       var getHrefForSlug = function getHrefForSlug(path) {
-        var dataRoute = (0, _getAssetPathFromRoute["default"])(path, '.json');
+        var dataRoute = (0, _router.addLocale)((0, _getAssetPathFromRoute["default"])(path, '.json'), locale, defaultLocale);
         return (0, _router.addBasePath)("/_next/data/".concat(_this2.buildId).concat(dataRoute).concat(ssg ? '' : search));
       };
 
@@ -1294,7 +1304,7 @@ var PageLoader = /*#__PURE__*/function () {
 
   }, {
     key: "prefetchData",
-    value: function prefetchData(href, asPath) {
+    value: function prefetchData(href, asPath, locale, defaultLocale) {
       var _this3 = this;
 
       var _ref3 = (0, _parseRelativeUrl.parseRelativeUrl)(href),
@@ -1304,7 +1314,7 @@ var PageLoader = /*#__PURE__*/function () {
       return this.promisedSsgManifest.then(function (s, _dataHref) {
         return (// Check if the route requires a data file
           s.has(route) && ( // Try to generate data href, noop when falsy
-          _dataHref = _this3.getDataHref(href, asPath, true)) && // noop when data has already been prefetched (dedupe)
+          _dataHref = _this3.getDataHref(href, asPath, true, locale, defaultLocale)) && // noop when data has already been prefetched (dedupe)
           !document.querySelector("link[rel=\"".concat(relPrefetch, "\"][href^=\"").concat(_dataHref, "\"]")) && // Inject the `<link rel=prefetch>` tag for above computed `href`.
           appendLink(_dataHref, relPrefetch, 'fetch')["catch"](function () {
             /* ignore prefetch error */

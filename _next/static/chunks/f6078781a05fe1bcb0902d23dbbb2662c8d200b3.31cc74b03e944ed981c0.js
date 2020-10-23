@@ -636,6 +636,8 @@ var _classCallCheck = __webpack_require__("lwsE");
 var _createClass = __webpack_require__("W8MJ");
 
 exports.__esModule = true;
+exports.addLocale = addLocale;
+exports.delLocale = delLocale;
 exports.hasBasePath = hasBasePath;
 exports.addBasePath = addBasePath;
 exports.delBasePath = delBasePath;
@@ -684,13 +686,29 @@ function buildCancellationError() {
   });
 }
 
+function addPathPrefix(path, prefix) {
+  return prefix && path.startsWith('/') ? path === '/' ? (0, _normalizeTrailingSlash.normalizePathTrailingSlash)(prefix) : "".concat(prefix).concat(path) : path;
+}
+
+function addLocale(path, locale, defaultLocale) {
+  if (false) {}
+
+  return path;
+}
+
+function delLocale(path, locale) {
+  if (false) {}
+
+  return path;
+}
+
 function hasBasePath(path) {
   return path === basePath || path.startsWith(basePath + '/');
 }
 
 function addBasePath(path) {
   // we only add the basepath on relative urls
-  return basePath && path.startsWith('/') ? path === '/' ? (0, _normalizeTrailingSlash.normalizePathTrailingSlash)(basePath) : basePath + path : path;
+  return addPathPrefix(path, basePath);
 }
 
 function delBasePath(path) {
@@ -875,7 +893,10 @@ var Router = /*#__PURE__*/function () {
         initialStyleSheets = _ref.initialStyleSheets,
         err = _ref.err,
         subscription = _ref.subscription,
-        isFallback = _ref.isFallback;
+        isFallback = _ref.isFallback,
+        locale = _ref.locale,
+        locales = _ref.locales,
+        defaultLocale = _ref.defaultLocale;
 
     _classCallCheck(this, Router);
 
@@ -896,6 +917,9 @@ var Router = /*#__PURE__*/function () {
     this.isFallback = void 0;
     this._inFlightRoute = void 0;
     this._shallow = void 0;
+    this.locale = void 0;
+    this.locales = void 0;
+    this.defaultLocale = void 0;
 
     this.onPopState = function (e) {
       var state = e.state;
@@ -991,6 +1015,8 @@ var Router = /*#__PURE__*/function () {
 
     this.isSsr = true;
     this.isFallback = isFallback;
+
+    if (false) {}
 
     if (true) {
       // make sure "as" doesn't start with double slashes or else it can
@@ -1099,7 +1125,8 @@ var Router = /*#__PURE__*/function () {
                   this.abortComponentLoad(this._inFlightRoute);
                 }
 
-                cleanedAs = hasBasePath(as) ? delBasePath(as) : as;
+                as = addLocale(as, this.locale, this.defaultLocale);
+                cleanedAs = delLocale(hasBasePath(as) ? delBasePath(as) : as, this.locale);
                 this._inFlightRoute = as; // If the url change is only related to a hash change
                 // We should not proceed. We should only change the state.
                 // WARNING: `_h` is an internal option for handing Next.js client-side
@@ -1107,7 +1134,7 @@ var Router = /*#__PURE__*/function () {
                 // any time without notice.
 
                 if (!(!options._h && this.onlyAHashChange(cleanedAs))) {
-                  _context.next = 16;
+                  _context.next = 17;
                   break;
                 }
 
@@ -1120,16 +1147,16 @@ var Router = /*#__PURE__*/function () {
                 Router.events.emit('hashChangeComplete', as);
                 return _context.abrupt("return", true);
 
-              case 16:
-                _context.next = 18;
+              case 17:
+                _context.next = 19;
                 return this.pageLoader.getPageList();
 
-              case 18:
+              case 19:
                 pages = _context.sent;
-                _context.next = 21;
+                _context.next = 22;
                 return this.pageLoader.promisedBuildManifest;
 
-              case 21:
+              case 22:
                 _yield$this$pageLoade = _context.sent;
                 rewrites = _yield$this$pageLoade.__rewrites;
                 parsed = (0, _parseRelativeUrl.parseRelativeUrl)(url);
@@ -1162,10 +1189,10 @@ var Router = /*#__PURE__*/function () {
 
                 if (false) {}
 
-                resolvedAs = delBasePath(resolvedAs);
+                resolvedAs = delLocale(delBasePath(resolvedAs), this.locale);
 
                 if (!(0, _isDynamic.isDynamicRoute)(route)) {
-                  _context.next = 49;
+                  _context.next = 50;
                   break;
                 }
 
@@ -1177,7 +1204,7 @@ var Router = /*#__PURE__*/function () {
                 interpolatedAs = shouldInterpolate ? interpolateAs(route, asPathname, query) : {};
 
                 if (!(!routeMatch || shouldInterpolate && !interpolatedAs.result)) {
-                  _context.next = 48;
+                  _context.next = 49;
                   break;
                 }
 
@@ -1186,7 +1213,7 @@ var Router = /*#__PURE__*/function () {
                 });
 
                 if (!(missingParams.length > 0)) {
-                  _context.next = 46;
+                  _context.next = 47;
                   break;
                 }
 
@@ -1194,11 +1221,11 @@ var Router = /*#__PURE__*/function () {
 
                 throw new Error((shouldInterpolate ? "The provided `href` (".concat(url, ") value is missing query values (").concat(missingParams.join(', '), ") to be interpolated properly. ") : "The provided `as` value (".concat(asPathname, ") is incompatible with the `href` value (").concat(route, "). ")) + "Read more: https://err.sh/vercel/next.js/".concat(shouldInterpolate ? 'href-interpolation-failed' : 'incompatible-href-as'));
 
-              case 46:
-                _context.next = 49;
+              case 47:
+                _context.next = 50;
                 break;
 
-              case 48:
+              case 49:
                 if (shouldInterpolate) {
                   as = (0, _utils.formatWithValidation)(Object.assign({}, parsedAs, {
                     pathname: interpolatedAs.result,
@@ -1209,18 +1236,18 @@ var Router = /*#__PURE__*/function () {
                   Object.assign(query, routeMatch);
                 }
 
-              case 49:
+              case 50:
                 Router.events.emit('routeChangeStart', as);
-                _context.prev = 50;
-                _context.next = 53;
+                _context.prev = 51;
+                _context.next = 54;
                 return this.getRouteInfo(route, pathname, query, as, shallow);
 
-              case 53:
+              case 54:
                 routeInfo = _context.sent;
                 error = routeInfo.error, props = routeInfo.props, __N_SSG = routeInfo.__N_SSG, __N_SSP = routeInfo.__N_SSP; // handle redirect on client-transition
 
                 if (!((__N_SSG || __N_SSP) && props && props.pageProps && props.pageProps.__N_REDIRECT)) {
-                  _context.next = 64;
+                  _context.next = 65;
                   break;
                 }
 
@@ -1229,7 +1256,7 @@ var Router = /*#__PURE__*/function () {
                 // it's not
 
                 if (!destination.startsWith('/')) {
-                  _context.next = 62;
+                  _context.next = 63;
                   break;
                 }
 
@@ -1238,62 +1265,62 @@ var Router = /*#__PURE__*/function () {
                 this._resolveHref(parsedHref, pages);
 
                 if (!pages.includes(parsedHref.pathname)) {
-                  _context.next = 62;
+                  _context.next = 63;
                   break;
                 }
 
                 return _context.abrupt("return", this.change('replaceState', destination, destination, options));
 
-              case 62:
+              case 63:
                 window.location.href = destination;
                 return _context.abrupt("return", new Promise(function () {}));
 
-              case 64:
+              case 65:
                 Router.events.emit('beforeHistoryChange', as);
-                this.changeState(method, url, as, options);
+                this.changeState(method, url, addLocale(as, this.locale, this.defaultLocale), options);
 
                 if (false) {}
 
-                _context.next = 69;
+                _context.next = 70;
                 return this.set(route, pathname, query, cleanedAs, routeInfo)["catch"](function (e) {
                   if (e.cancelled) error = error || e;else throw e;
                 });
 
-              case 69:
+              case 70:
                 if (!error) {
-                  _context.next = 72;
+                  _context.next = 73;
                   break;
                 }
 
                 Router.events.emit('routeChangeError', error, cleanedAs);
                 throw error;
 
-              case 72:
+              case 73:
                 if (false) {}
 
                 Router.events.emit('routeChangeComplete', as);
                 return _context.abrupt("return", true);
 
-              case 77:
-                _context.prev = 77;
-                _context.t0 = _context["catch"](50);
+              case 78:
+                _context.prev = 78;
+                _context.t0 = _context["catch"](51);
 
                 if (!_context.t0.cancelled) {
-                  _context.next = 81;
+                  _context.next = 82;
                   break;
                 }
 
                 return _context.abrupt("return", false);
 
-              case 81:
+              case 82:
                 throw _context.t0;
 
-              case 82:
+              case 83:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[50, 77]]);
+        }, _callee, this, [[51, 78]]);
       }));
 
       function change(_x, _x2, _x3, _x4) {
@@ -1492,7 +1519,7 @@ var Router = /*#__PURE__*/function () {
                   dataHref = this.pageLoader.getDataHref((0, _utils.formatWithValidation)({
                     pathname: pathname,
                     query: query
-                  }), delBasePath(as), __N_SSG);
+                  }), delBasePath(as), __N_SSG, this.locale, this.defaultLocale);
                 }
 
                 _context3.next = 21;
@@ -1690,7 +1717,7 @@ var Router = /*#__PURE__*/function () {
               case 11:
                 route = (0, _normalizeTrailingSlash.removePathTrailingSlash)(pathname);
                 _context4.next = 14;
-                return Promise.all([this.pageLoader.prefetchData(url, asPath), this.pageLoader[options.priority ? 'loadPage' : 'prefetch'](route)]);
+                return Promise.all([this.pageLoader.prefetchData(url, asPath, this.locale, this.defaultLocale), this.pageLoader[options.priority ? 'loadPage' : 'prefetch'](route)]);
 
               case 14:
               case "end":
@@ -2954,7 +2981,7 @@ var singletonRouter = {
   }
 }; // Create public properties and methods of the router in the singletonRouter
 
-var urlPropertyFields = ['pathname', 'route', 'query', 'asPath', 'components', 'isFallback', 'basePath'];
+var urlPropertyFields = ['pathname', 'route', 'query', 'asPath', 'components', 'isFallback', 'basePath', 'locale', 'locales', 'defaultLocale'];
 var routerEvents = ['routeChangeStart', 'beforeHistoryChange', 'routeChangeComplete', 'routeChangeError', 'hashChangeStart', 'hashChangeComplete'];
 var coreMethodFields = ['push', 'replace', 'reload', 'back', 'prefetch', 'beforePopState']; // Events is a static property on the router, the router doesn't have to be initialized to use it
 
@@ -3054,7 +3081,7 @@ function makePublicRouterInstance(router) {
       var property = _step.value;
 
       if (typeof _router[property] === 'object') {
-        instance[property] = Object.assign({}, _router[property]); // makes sure query is not stateful
+        instance[property] = Object.assign(Array.isArray(_router[property]) ? [] : {}, _router[property]); // makes sure query is not stateful
 
         continue;
       }
