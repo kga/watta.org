@@ -1,9 +1,9 @@
-name: lint
+name: ci
 on:
   pull_request:
 
 jobs:
-  lint:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -28,3 +28,6 @@ jobs:
 
       - name: compile
         run: yarn compile
+
+      - name: build
+        run: yarn build --debug
