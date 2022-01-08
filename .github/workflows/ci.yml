@@ -1,9 +1,9 @@
-name: lint
+name: ci
 on:
   pull_request:
 
 jobs:
-  lint:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
