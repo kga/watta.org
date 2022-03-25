@@ -16,7 +16,7 @@
     "posttest": "yarn run check"
   },
   "dependencies": {
-    "next": "^12.1.0",
+    "next": "^12.1.1",
     "sass": "^1.49.9",
     "normalize.css": "^8.0.1",
     "react": "17.0.2",
