@@ -1,5 +1,4 @@
 {
-  "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "build",
@@ -16,14 +15,19 @@
     "jsx": "preserve",
     "allowJs": true,
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "target": "es5",
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
-    "pages/**/*.tsx",
+    "**/*.ts",
+    "**/*.tsx"
   ],
   "exclude": [
     "node_modules",
-    "out",
-  ],
+    "out"
+  ]
 }
