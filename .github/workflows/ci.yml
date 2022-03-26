@@ -18,7 +18,7 @@ jobs:
 
       - name: install
         run: |
-          yarn install --frozen-lockfile
+          yarn install --immutable
 
       - name: Setup next.js build cache
         uses: actions/cache@v3
