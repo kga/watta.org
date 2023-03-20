@@ -271,10 +271,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.11.19":
-  version: 18.11.19
-  resolution: "@types/node@npm:18.11.19"
-  checksum: d7cd19fcfc59cbdd3f9ba0b4072cb7adc21bd575bd8eb7d7e698975e63564aaa83f03434f32b12331f84f73d0b369d9cbe2371e359d9d7f5c3361f4987f4f7da
+"@types/node@npm:^18.15.3":
+  version: 18.15.3
+  resolution: "@types/node@npm:18.15.3"
+  checksum: 31b1d92475a82c30de29aa6c0771b18a276552d191283b4423ba2d61b3f01159bf0d02576c0b7cc834b043997893800db6bb47f246083ed85aa45e79c80875d7
   languageName: node
   linkType: hard
 
@@ -3254,7 +3254,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "watta.org@workspace:."
   dependencies:
-    "@types/node": ^18.11.19
+    "@types/node": ^18.15.3
     "@types/react": ^18.0.28
     eslint: ^8.28.0
     eslint-config-next: 13.0.4
