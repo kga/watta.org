@@ -36,9 +36,6 @@ jobs:
       - name: build
         run: npm run build
 
-      - name: export
-        run: npm run export
-
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3.9.3
         if: ${{ github.ref == 'refs/heads/main' }}
